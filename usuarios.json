@@ -1,0 +1,27 @@
+[
+  {
+    "nome": "joao",
+    "senha": "123",
+    "acessoConfig": false
+  },
+  {
+    "nome": "admin",
+    "senha": "admin",
+    "acessoConfig": true
+  },
+  {
+    "nome": "wendell",
+    "senha": "123",
+    "acessoConfig": false
+  },
+  {
+    "nome": "abel",
+    "senha": "123",
+    "acessoConfig": false
+  },
+  {
+    "nome": "bruno",
+    "senha": "123",
+    "acessoConfig": false
+  }
+]

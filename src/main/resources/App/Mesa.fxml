@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="App.Controllers.MesaController">
-
+<BorderPane fx:id="painelRaiz" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controllers.MesaController" prefHeight="600" prefWidth="800">
     <top>
-        <HBox spacing="20" alignment="CENTER_LEFT" >
-            <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
-            </padding>
-            <Label fx:id="labelUsuario" style="-fx-font-size: 16; -fx-font-weight: bold;" />
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 12; -fx-background-color: linear-gradient(#061827, #07192a);">
+            <Label text="Sistema Restaurante" style="-fx-text-fill: #cfe8ff; -fx-font-size: 18px; -fx-font-weight: 700;" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="botaoConfig" text="⚙️ Configurações" onAction="#abrirConfiguracoes" visible="false"/>
+            <Label fx:id="labelUsuario" text="Usuário: ..." style="-fx-text-fill: #9fc3ff; -fx-font-size: 14px;" />
+<!--            <Button fx:id="botaoConfig" onAction="#abrirConfiguracoes" text="Configurações" visible="false" />-->
         </HBox>
     </top>
 
-    <center>
-        <TilePane fx:id="painelMesas" hgap="15" vgap="15" alignment="CENTER" >
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
-            <!-- As mesas serão adicionadas dinamicamente -->
-        </TilePane>
-    </center>
+    <left>
+        <VBox spacing="12" style="-fx-padding: 18; -fx-background-color: #071826; -fx-border-color: rgba(255,255,255,0.03); -fx-pref-width: 240;">
+            <Label text="Menu" style="-fx-text-fill: #9fc3ff; -fx-font-size: 14px; -fx-font-weight: 600;" />
 
+            <Button onAction="#abrirDashboardMesas" styleClass="menu-btn" text="Mesas" maxWidth="Infinity" />
+
+<!--            <Button fx:id="botaoProdutos" onAction="#abrirProdutos" styleClass="menu-btn" text="Produtos" maxWidth="Infinity" visible="false" />-->
+<!--            <Button fx:id="botaoUsuarios" onAction="#abrirUsuarios" styleClass="menu-btn" text="Usuários" maxWidth="Infinity" visible="false" />-->
+        </VBox>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+            <content>
+                <TilePane fx:id="painelMesas" hgap="15" vgap="15" style="-fx-background-color: transparent; -fx-padding: 20;">
+                </TilePane>
+            </content>
+        </ScrollPane>
+    </center>
 </BorderPane>
