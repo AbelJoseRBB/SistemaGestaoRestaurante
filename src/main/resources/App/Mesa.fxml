@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="App.Controllers.MesaController">
+
+    <top>
+        <HBox spacing="20" alignment="CENTER_LEFT" >
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label fx:id="labelUsuario" style="-fx-font-size: 16; -fx-font-weight: bold;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="botaoConfig" text="⚙️ Configurações" onAction="#abrirConfiguracoes" visible="false"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TilePane fx:id="painelMesas" hgap="15" vgap="15" alignment="CENTER" >
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <!-- As mesas serão adicionadas dinamicamente -->
+        </TilePane>
+    </center>
+
+</BorderPane>

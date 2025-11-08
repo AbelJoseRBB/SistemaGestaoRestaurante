@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="App.Controllers.LoginController">
+    <children>
+        <VBox spacing="10" alignment="CENTER" prefWidth="400" prefHeight="250" layoutX="50" layoutY="30">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+            <Label text="Login do Sistema" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+            <TextField fx:id="campoUsuario" promptText="Usuário" prefWidth="250"/>
+            <PasswordField fx:id="campoSenha" promptText="Senha" prefWidth="250"/>
+
+            <Button text="Entrar" onAction="#fazerLogin" prefWidth="100"/>
+
+            <Label fx:id="mensagemErro" textFill="red"/>
+        </VBox>
+    </children>
+</AnchorPane>
