@@ -99,17 +99,10 @@ public class GerenciarMesaController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/ComandaView.fxml"));
             Parent root = loader.load();
             ComandaController comandaController = loader.getController();
-
             comandaController.carregarComanda(this.mesa, comandaParaAbrir, this.atendente, this.produtosDisponiveis);
-
-            Stage comandaStage = new Stage();
-            comandaStage.initModality(Modality.APPLICATION_MODAL);
-            comandaStage.setTitle("Editando " + comandaParaAbrir.toString());
-            comandaStage.setScene(new Scene(root));
-
-            comandaStage.showAndWait();
-
-            atualizarListaComandas();
+            Stage stageAtual = (Stage) listaComandas.getScene().getWindow();
+            stageAtual.setScene(new Scene(root));
+            stageAtual.setTitle("Editando " + comandaParaAbrir.toString());
 
         } catch (IOException e) {
             e.printStackTrace();

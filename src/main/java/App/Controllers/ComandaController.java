@@ -5,19 +5,15 @@ import Model.Mesa;
 import Model.Pedido;
 import Model.Produtos.Produto;
 import Model.Usuarios.Usuario;
-// --- MUDANÇA: Imports novos ---
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-// --- FIM ---
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -35,17 +31,21 @@ public class ComandaController {
     private ListView<Pedido> listaPedidos; // A lista visual
     @FXML
     private Label labelTotal;
-    // ... (outros botões)
+
+    @FXML
+    private ListView<Produto> listaProdutosDisponiveis;
+    @FXML
+    private Spinner<Integer> spinnerQuantidade;
+    @FXML
+    private TextField campoObservacao;
+
 
     private Mesa mesa;
     private Comanda comanda;
     private Usuario atendente;
-    private List<Produto> produtosDisponiveis;
+    private List<Produto> produtosDisponiveis; // Esta lista agora vamos usar para popular o ListView
 
-    // --- MUDANÇA: Lista Observável ---
-    // Esta lista vai "espelhar" a lista de pedidos da comanda
     private ObservableList<Pedido> observableListPedidos;
-    // --- FIM ---
 
     public void carregarComanda(Mesa mesa, Comanda comanda, Usuario atendente, List<Produto> produtos) {
         this.mesa = mesa;
@@ -56,57 +56,55 @@ public class ComandaController {
         labelTituloComanda.setText("Editando " + comanda.toString());
         campoCliente.setText(comanda.getClienteNome());
 
-        // --- MUDANÇA: Configura a Lista Observável ---
-        // 1. Pega a lista ORIGINAL da comanda (que não é mais cópia)
+        // Configura a lista de PEDIDOS JÁ FEITOS
         List<Pedido> pedidosDaComanda = this.comanda.getPedidos();
-        // 2. Cria a lista "espelho" que o JavaFX vai usar
         this.observableListPedidos = FXCollections.observableArrayList(pedidosDaComanda);
-        // 3. Diz ao ListView para usar essa lista espelho
         this.listaPedidos.setItems(this.observableListPedidos);
-        // --- FIM ---
 
-        atualizarTotal(); // (Renomeei o método, só pra ficar mais claro)
+        // =============================================
+        // ---   NOVA LINHA   ---
+        // Popula a lista de PRODUTOS DISPONÍVEIS (o novo painel da esquerda)
+        this.listaProdutosDisponiveis.getItems().addAll(this.produtosDisponiveis);
+        // =============================================
+
+        atualizarTotal();
     }
 
     @FXML
     private void adicionarPedido() {
-        // (O código de abrir o pop-up é o mesmo)
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/SelecionarProdutoView.fxml"));
-//            Parent root = loader.load();
-//            SelecionarProdutoController controller = loader.getController();
-//            controller.inicializar(this.produtosDisponiveis, this.atendente);
-//
-//            Stage popupStage = new Stage();
-//            popupStage.initModality(Modality.APPLICATION_MODAL);
-//            popupStage.setTitle("Adicionar Novo Pedido");
-//            popupStage.setScene(new Scene(root));
-//            popupStage.showAndWait();
-//
-//            Pedido novoPedido = controller.getNovoPedido();
-//
-//            if (novoPedido != null) {
-//                // (Lógica de baixar estoque, que já funciona)
-//                Produto produtoPedido = novoPedido.getProdutoPedido();
-//                int qtd = novoPedido.getQuantidade();
-//                if (produtoPedido.getEstoque() < qtd) {
-//                    mostrarAlerta("Estoque Insuficiente", "Estoque Atual: " + produtoPedido.getEstoque());
-//                    return;
-//                }
-//                produtoPedido.setEstoque(produtoPedido.getEstoque() - qtd);
-//                System.out.println("Baixa estoque: " + produtoPedido.getNome() + " | Novo Estoque: " + produtoPedido.getEstoque());
-//
-//                // --- MUDANÇA: Adiciona nos DOIS lugares ---
-//                // Adiciona na comanda (modelo)
-//                this.comanda.adicionarPedido(novoPedido);
-//                // Adiciona na lista "espelho" (visual)
-//                this.observableListPedidos.add(novoPedido);
-//                // --- FIM ---
-//
-//                atualizarTotal();
-//            }
-//
-//        } catch (IOException e) { e.printStackTrace(); }
+        // 1. Pega os dados dos campos do FXML (não mais de um pop-up)
+        Produto produtoSelecionado = listaProdutosDisponiveis.getSelectionModel().getSelectedItem();
+        if (produtoSelecionado == null) {
+            mostrarAlerta("Erro", "Nenhum produto foi selecionado.");
+            return;
+        }
+
+        int qtd = spinnerQuantidade.getValue();
+        String obs = campoObservacao.getText();
+
+        // 2. Cria o novo pedido
+        // (No seu código antigo, Pedido recebia um 'atendente', estou mantendo)
+        Pedido novoPedido = new Pedido(produtoSelecionado, qtd, obs, this.atendente);
+
+        // 3. Lógica de estoque (copiada do seu método antigo)
+        if (produtoSelecionado.getEstoque() < qtd) {
+            mostrarAlerta("Estoque Insuficiente", "Estoque Atual: " + produtoSelecionado.getEstoque());
+            return;
+        }
+        produtoSelecionado.setEstoque(produtoSelecionado.getEstoque() - qtd);
+        System.out.println("Baixa estoque: " + produtoSelecionado.getNome() + " | Novo Estoque: " + produtoSelecionado.getEstoque());
+
+        // 4. Adiciona o pedido na Comanda (modelo) e na Lista (visual)
+        this.comanda.adicionarPedido(novoPedido);
+        this.observableListPedidos.add(novoPedido);
+
+        // 5. Atualiza o total
+        atualizarTotal();
+
+        // 6. (Opcional) Limpa os campos após adicionar
+        listaProdutosDisponiveis.getSelectionModel().clearSelection();
+        spinnerQuantidade.getValueFactory().setValue(1);
+        campoObservacao.clear();
     }
 
     @FXML
@@ -138,13 +136,28 @@ public class ComandaController {
 
     @FXML
     private void fecharComanda() {
-        // (Sem mudanças aqui, a lógica de estoque já saiu)
+        // A lógica original de salvar e fechar a comanda
         comanda.setClienteNome(campoCliente.getText());
         comanda.fechar();
-        this.mesa.removerComanda(this.comanda);
+
         mostrarAlerta("Comanda Fechada", "Comanda fechada com sucesso!\nTotal: R$ " + comanda.calcularTotal());
-        Stage stage = (Stage) labelTotal.getScene().getWindow();
-        stage.close();
+
+        // --- MUDANÇA PARA "VOLTAR" ---
+        try {
+            // 1. Carrega o FXML da tela ANTERIOR (GerenciarMesaView)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/GerenciarMesaView.fxml"));
+            Parent root = loader.load();
+
+            GerenciarMesaController gerenciarMesaController = loader.getController();
+            gerenciarMesaController.inicializar(this.mesa, this.atendente, this.produtosDisponiveis);
+            Stage stage = (Stage) labelTotal.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Gerenciando Mesa " + this.mesa.getNumMesa());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Erro", "Não foi possível voltar para a tela de gerenciamento.");
+        }
     }
 
     // Método renomeado de "atualizarTela" para "atualizarTotal"
