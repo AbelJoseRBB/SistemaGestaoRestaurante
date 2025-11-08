@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controllers.ComandaController" prefHeight="500.0" prefWidth="400.0">
+    <top>
+        <VBox style="-fx-padding: 15; -fx-background-color: #0A1E2E; -fx-spacing: 5;">
+            <Label fx:id="labelTituloComanda" text="Comanda - Mesa X" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;" />
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Cliente:" style="-fx-text-fill: #9fc3ff;" />
+                <TextField fx:id="campoCliente" promptText="Nome do cliente" HBox.hgrow="ALWAYS" />
+            </HBox>
+        </VBox>
+    </top>
+    <center>
+        <ListView fx:id="listaPedidos" />
+    </center>
+    <bottom>
+        <VBox>
+            <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
+                <Button fx:id="botaoAddPedido" onAction="#adicionarPedido" text="Adicionar Pedido" prefWidth="150" />
+                <Button fx:id="botaoRemPedido" onAction="#removerPedido" text="Remover Pedido" prefWidth="150" />
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" style="-fx-padding: 10; -fx-background-color: #071826;">
+                <Label fx:id="labelTotal" text="Total: R$ 0,00" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;" />
+                <Button fx:id="botaoFecharComanda" onAction="#fecharComanda" text="Fechar Comanda" style="-fx-margin-left: 20;" />
+            </HBox>
+        </VBox>
+    </bottom>
+</BorderPane>

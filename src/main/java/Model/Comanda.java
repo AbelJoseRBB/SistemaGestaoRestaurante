@@ -1,17 +1,24 @@
 package Model;
 import java.util.ArrayList;
-import  java.util.List;
+import java.util.List;
 
 public class Comanda {
-    private int numero;
+
+    private static int proximoId = 1;
+    private final int id;
     private String clienteNome;
     private boolean fechada;
-    private List<Pedido> pedidos;
+    private List<Pedido> pedidos; // A lista original
 
-    public Comanda(int numero) {
-        this.numero = numero;
+    public Comanda() {
+        this.id = proximoId++;
         this.pedidos = new ArrayList<>();
         this.fechada = false;
+        this.clienteNome = "Cliente " + this.id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getClienteNome() {
@@ -26,10 +33,6 @@ public class Comanda {
         return fechada;
     }
 
-    public int getNumero() {
-        return numero;
-    }
-
     public void adicionarPedido(Pedido p){
         if(fechada) throw new IllegalArgumentException("Comanda já está fechada");
         pedidos.add(p);
@@ -37,7 +40,7 @@ public class Comanda {
 
     public boolean removerPedido(int indice){
         if(fechada) return false;
-        if(indice < 0 || indice > pedidos.size()) return  false;
+        if(indice < 0 || indice >= pedidos.size()) return  false;
         pedidos.remove(indice);
         return  true;
     }
@@ -54,20 +57,11 @@ public class Comanda {
     }
 
     public List<Pedido> getPedidos(){
-        return new ArrayList<>(pedidos);
+        return this.pedidos;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Comanda #").append(numero).append(fechada ? " (FECHADA)\n" : " (ABERTA)\n");
-        for (int i = 0; i < pedidos.size(); i++) {
-            sb.append(i).append(": ").append(pedidos.get(i).toString()).append("\n");
-        }
-        sb.append(String.format("Total: R$ %.2f\n", calcularTotal()));
-        return sb.toString();
+        return String.format("Comanda #%d (%s) - Total: R$ %.2f", id, clienteNome, calcularTotal());
     }
-
-
-
 }

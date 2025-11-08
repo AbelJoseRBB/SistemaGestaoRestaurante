@@ -16,7 +16,7 @@
             <Label text="Sistema Restaurante" style="-fx-text-fill: #cfe8ff; -fx-font-size: 18px; -fx-font-weight: 700;" />
             <Region HBox.hgrow="ALWAYS" />
             <Label fx:id="labelUsuario" text="Usuário: ..." style="-fx-text-fill: #9fc3ff; -fx-font-size: 14px;" />
-<!--            <Button fx:id="botaoConfig" onAction="#abrirConfiguracoes" text="Configurações" visible="false" />-->
+            <Button fx:id="botaoConfig" onAction="#abrirConfiguracoes" text="Configurações" visible="false" />
         </HBox>
     </top>
 
@@ -26,8 +26,8 @@
 
             <Button onAction="#abrirDashboardMesas" styleClass="menu-btn" text="Mesas" maxWidth="Infinity" />
 
-<!--            <Button fx:id="botaoProdutos" onAction="#abrirProdutos" styleClass="menu-btn" text="Produtos" maxWidth="Infinity" visible="false" />-->
-<!--            <Button fx:id="botaoUsuarios" onAction="#abrirUsuarios" styleClass="menu-btn" text="Usuários" maxWidth="Infinity" visible="false" />-->
+            <Button fx:id="botaoProdutos" onAction="#abrirProdutos" styleClass="menu-btn" text="Produtos" maxWidth="Infinity" visible="false" />
+            <Button fx:id="botaoUsuarios" onAction="#abrirUsuarios" styleClass="menu-btn" text="Usuários" maxWidth="Infinity" visible="false" />
         </VBox>
     </left>
 

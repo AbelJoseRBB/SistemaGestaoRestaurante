@@ -20,9 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,34 +103,34 @@ public class MesaController {
         label.setStyle("-fx-font-weight: bold;");
         Label statusLabel = new Label(mesa.isOcupada() ? "Ocupada (" + mesa.getComandas().size() + ")" : "Livre");
         Button botaoAbrir = new Button(mesa.isOcupada() ? "Gerenciar" : "Abrir Mesa");
-//        botaoAbrir.setOnAction(e -> abrirMesaEspecifica(mesa.getNumMesa()));
+        botaoAbrir.setOnAction(e -> abrirMesaEspecifica(mesa.getNumMesa()));
         box.getChildren().addAll(label, statusLabel, botaoAbrir);
         return box;
     }
 
-//    private void abrirMesaEspecifica(int numeroMesa) {
-//        Mesa mesaSelecionada = this.listaDeMesas.get(numeroMesa - 1);
-//        try {
-//            FXMLLoader loader = new FXMLLoader(new File("src/Resources/GerenciarMesaView.fxml").toURI().toURL());
-//            Parent root = loader.load();
-//            GerenciarMesaController controller = loader.getController();
-//            controller.inicializar(mesaSelecionada, this.usuarioLogado, this.listaDeProdutos);
-//            Stage gerenciarStage = new Stage();
-//            gerenciarStage.initModality(Modality.APPLICATION_MODAL);
-//            gerenciarStage.setTitle("Gerenciando Mesa " + numeroMesa);
-//            gerenciarStage.setScene(new Scene(root));
-//            gerenciarStage.showAndWait();
-//            atualizarVisualDasMesas();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            mostrarAlerta("Erro", "Não foi possível abrir o gerenciador da mesa.");
-//        }
-//    }
+    private void abrirMesaEspecifica(int numeroMesa) {
+        Mesa mesaSelecionada = this.listaDeMesas.get(numeroMesa - 1);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/GerenciarMesaView.fxml"));
+            Parent root = loader.load();
+            GerenciarMesaController controller = loader.getController();
+            controller.inicializar(mesaSelecionada, this.usuarioLogado, this.listaDeProdutos);
+            Stage gerenciarStage = new Stage();
+            gerenciarStage.initModality(Modality.APPLICATION_MODAL);
+            gerenciarStage.setTitle("Gerenciando Mesa " + numeroMesa);
+            gerenciarStage.setScene(new Scene(root));
+            gerenciarStage.showAndWait();
+            atualizarVisualDasMesas();
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Erro", "Não foi possível abrir o gerenciador da mesa.");
+        }
+    }
 //
-//    @FXML
-//    private void abrirConfiguracoes() {
+    @FXML
+    private void abrirConfiguracoes() {
 //        try {
-//            FXMLLoader loader = new FXMLLoader(new File("src/Resources/ConfigView.fxml").toURI().toURL());
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/ConfigView.fxml"));
 //            Node painelConfig = loader.load();
 //            ConfigController controller = loader.getController();
 //            controller.inicializar(this.config, this.persistenceService);
@@ -142,7 +140,7 @@ public class MesaController {
 //            e.printStackTrace();
 //            mostrarAlerta("Erro", "Não foi possível carregar a tela de configurações.");
 //        }
-//    }
+    }
 
     @FXML
     private void abrirDashboardMesas() {
@@ -151,9 +149,9 @@ public class MesaController {
     }
 
     @FXML
-//    private void abrirProdutos() {
+    private void abrirProdutos() {
 //        try {
-//            FXMLLoader loader = new FXMLLoader(new File("src/Resources/ProdutosView.fxml").toURI().toURL());
+//            FXMLLoader loader = new FXMLLoader(etClass().getResource("/App/ProdutosView.fxml"));
 //            Node painelProdutos = loader.load();
 //            ProdutosController controller = loader.getController();
 //            controller.inicializar(this.listaDeProdutos);
@@ -162,12 +160,12 @@ public class MesaController {
 //            e.printStackTrace();
 //            mostrarAlerta("Erro", "Não foi possível carregar a tela de produtos.");
 //        }
-//    }
+    }
 //
-//    @FXML
-//    private void abrirUsuarios() {
+    @FXML
+    private void abrirUsuarios() {
 //        try {
-//            FXMLLoader loader = new FXMLLoader(new File("src/Resources/UsuariosView.fxml").toURI().toURL());
+//            FXMLLoader loader = new FXMLLoader(etClass().getResource("/App/UsuariosView.fxml"));
 //            Node painelUsuarios = loader.load();
 //            UsuariosController controller = loader.getController();
 //
@@ -180,7 +178,7 @@ public class MesaController {
 //            e.printStackTrace();
 //            mostrarAlerta("Erro", "Não foi possível carregar a tela de usuários.");
 //        }
-//    }
+    }
 
     private void mostrarAlerta(String titulo, String msg) {
         Alert alerta = new Alert(Alert.AlertType.INFORMATION);
