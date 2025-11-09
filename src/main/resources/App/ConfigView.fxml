@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controllers.ConfigController" style="-fx-padding: 10;">
+    <top>
+        <Label text="Configurações do Sistema" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;" />
+    </top>
+    <center>
+        <VBox spacing="15">
+            <Label text="Configurações Gerais" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+            <GridPane hgap="10" vgap="10">
+                <Label text="Número Total de Mesas:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                <TextField fx:id="campoNumMesas" promptText="ex: 10" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                <Label text="Taxa de Serviço (%):" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                <TextField fx:id="campoTaxaServico" promptText="ex: 10.0" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+            </GridPane>
+
+            <Label text="Informações do Restaurante (para Recibo)" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 15 0 0 0;" />
+            <GridPane hgap="10" vgap="10">
+                <Label text="Nome do Restaurante:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                <TextField fx:id="campoNomeRestaurante" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                <Label text="Info (Endereço/CNPJ):" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                <TextField fx:id="campoInfoRestaurante" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+            </GridPane>
+
+            <Button onAction="#salvarConfiguracoes" text="Salvar Configurações" defaultButton="true" style="-fx-font-size: 14px; -fx-margin-top: 20;" />
+        </VBox>
+    </center>
+</BorderPane>

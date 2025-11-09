@@ -1,10 +1,5 @@
 [
   {
-    "nome": "joao",
-    "senha": "123",
-    "acessoConfig": false
-  },
-  {
     "nome": "admin",
     "senha": "admin",
     "acessoConfig": true
@@ -23,5 +18,10 @@
     "nome": "bruno",
     "senha": "123",
     "acessoConfig": false
+  },
+  {
+    "nome": "teste",
+    "senha": "123",
+    "acessoConfig": true
   }
 ]

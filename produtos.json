@@ -10,7 +10,7 @@
     "id": 2,
     "nome": "Agua",
     "preco": 3.0,
-    "estoque": 97,
+    "estoque": 100,
     "descricao": "Garrafa 500ml"
   },
   {
@@ -18,7 +18,7 @@
     "nome": "Petisco",
     "preco": 25.0,
     "estoque": 50,
-    "descricao": "Por��o de Batata"
+    "descricao": "Porção de Batata"
   },
   {
     "id": 4,

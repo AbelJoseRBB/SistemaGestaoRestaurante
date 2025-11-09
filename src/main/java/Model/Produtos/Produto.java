@@ -51,6 +51,14 @@ public class Produto {
             this.estoque = estoque;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
     @Override
     public String toString() {
         return String.format("[%d] %s - R$ %.2f (estoque: %d)", id, nome, preco, estoque);

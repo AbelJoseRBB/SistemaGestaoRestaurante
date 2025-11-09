@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controllers.ProdutosController" style="-fx-padding: 10;">
+    <top>
+        <Label text="Gerenciador de Produtos" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;" />
+    </top>
+
+    <left>
+        <VBox spacing="10" prefWidth="300">
+            <Label text="Produtos Cadastrados" />
+            <ListView fx:id="listaProdutos" prefHeight="400.0" />
+            <Button onAction="#removerProduto" text="Remover Produto Selecionado" maxWidth="Infinity" />
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="10" style="-fx-padding: 0 0 0 20;"> <Label fx:id="labelFormulario" text="Adicionar Novo Produto" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+
+            <GridPane hgap="10" vgap="10">
+                <Label text="Nome:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                <TextField fx:id="campoNome" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                <Label text="Descrição:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                <TextField fx:id="campoDescricao" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                <Label text="Preço (R$):" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                <TextField fx:id="campoPreco" promptText="ex: 5.50" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                <Label text="Estoque:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                <TextField fx:id="campoEstoque" promptText="ex: 100" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+            </GridPane>
+
+            <HBox spacing="10">
+                <Button onAction="#salvar" text="Salvar" defaultButton="true" />
+                <Button onAction="#limparCampos" text="Novo" cancelButton="true" />
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

@@ -6,6 +6,7 @@ import Model.Produtos.Produto;
 import Model.Config;
 import Model.Usuarios.Interno;
 import Model.Usuarios.Usuario;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -129,17 +130,17 @@ public class MesaController {
 //
     @FXML
     private void abrirConfiguracoes() {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/ConfigView.fxml"));
-//            Node painelConfig = loader.load();
-//            ConfigController controller = loader.getController();
-//            controller.inicializar(this.config, this.persistenceService);
-//            painelRaiz.setCenter(painelConfig);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            mostrarAlerta("Erro", "Não foi possível carregar a tela de configurações.");
-//        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/ConfigView.fxml"));
+            Node painelConfig = loader.load();
+            ConfigController controller = loader.getController();
+            controller.inicializar(this.config, this.persistenceService);
+            painelRaiz.setCenter(painelConfig);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Erro", "Não foi possível carregar a tela de configurações.");
+        }
     }
 
     @FXML
@@ -150,34 +151,35 @@ public class MesaController {
 
     @FXML
     private void abrirProdutos() {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(etClass().getResource("/App/ProdutosView.fxml"));
-//            Node painelProdutos = loader.load();
-//            ProdutosController controller = loader.getController();
-//            controller.inicializar(this.listaDeProdutos);
-//            painelRaiz.setCenter(painelProdutos);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            mostrarAlerta("Erro", "Não foi possível carregar a tela de produtos.");
-//        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/ProdutosView.fxml"));
+            Node painelProdutos = loader.load();
+            ProdutosController controller = loader.getController();
+            this.listaDeProdutos = persistenceService.carregarProdutos();
+            controller.inicializar(this.listaDeProdutos);
+            painelRaiz.setCenter(painelProdutos);
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Erro", "Não foi possível carregar a tela de produtos.");
+        }
     }
-//
+
     @FXML
     private void abrirUsuarios() {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(etClass().getResource("/App/UsuariosView.fxml"));
-//            Node painelUsuarios = loader.load();
-//            UsuariosController controller = loader.getController();
-//
-//            // --- CORREÇÃO FINAL AQUI ---
-//            controller.inicializar(this.listaDeUsuarios, this.persistenceService);
-//
-//            painelRaiz.setCenter(painelUsuarios);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            mostrarAlerta("Erro", "Não foi possível carregar a tela de usuários.");
-//        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/UsuariosView.fxml"));
+            Node painelUsuarios = loader.load();
+            UsuariosController controller = loader.getController();
+
+            // --- CORREÇÃO FINAL AQUI ---
+            controller.inicializar(this.listaDeUsuarios, this.persistenceService);
+
+            painelRaiz.setCenter(painelUsuarios);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Erro", "Não foi possível carregar a tela de usuários.");
+        }
     }
 
     private void mostrarAlerta(String titulo, String msg) {

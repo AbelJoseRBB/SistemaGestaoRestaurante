@@ -4,6 +4,7 @@ import Model.Comanda;
 import Model.Mesa;
 import Model.Produtos.Produto;
 import Model.Usuarios.Usuario;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,10 +13,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog; // <-- 1. IMPORTA O POP-UP DE TEXTO
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional; // <-- 2. IMPORTA O "Optional" (para o pop-up)
