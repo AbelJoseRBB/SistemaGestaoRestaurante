@@ -141,6 +141,7 @@ public class GerenciarMesaController extends BaseController{
             comandaController.carregarComanda(this.mesa, comandaParaAbrir, this.atendente, this.produtosDisponiveis);
             Stage stageAtual = (Stage) listaComandas.getScene().getWindow();
             stageAtual.setScene(new Scene(root));
+            stageAtual.setMaximized(true);
             stageAtual.setTitle("Editando " + comandaParaAbrir.toString());
 
         } catch (IOException e) {
