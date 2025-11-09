@@ -39,8 +39,8 @@ public class UsuariosController extends BaseController{
 
     // Inicializa com a lista e o service
     public void inicializar(List<Usuario> listaUsuariosCentral, IPersistencia persistenceService) {
-        this.listaUsuariosCentral = listaUsuariosCentral;
         this.persistenceService = persistenceService; // Guarda o service
+        this.listaUsuariosCentral = listaUsuariosCentral;
 
         this.observableListUsuarios = FXCollections.observableArrayList(listaUsuariosCentral);
         this.listaUsuarios.setItems(observableListUsuarios);

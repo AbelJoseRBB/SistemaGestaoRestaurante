@@ -35,4 +35,10 @@ public abstract class Usuario {
 
     public boolean hasAcessoEstoque(){return acessoConfig;}
 
+    @Override
+    public String toString() {
+        String tipo = this.getClass().getSimpleName();
+        return String.format("%s (%s)", this.nome, tipo);
+    }
+
 }

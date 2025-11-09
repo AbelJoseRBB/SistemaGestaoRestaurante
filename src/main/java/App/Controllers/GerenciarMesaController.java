@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog; // <-- 1. IMPORTA O POP-UP DE TEXTO
@@ -24,6 +25,10 @@ public class GerenciarMesaController extends BaseController{
     private Label labelTituloMesa;
     @FXML
     private ListView<Comanda> listaComandas;
+    @FXML
+    private Button botaoAbrirComanda;
+    @FXML
+    private Button botaoReabrirComanda;
 
     private Mesa mesa;
     private Usuario atendente;
@@ -35,6 +40,42 @@ public class GerenciarMesaController extends BaseController{
         this.produtosDisponiveis = produtos;
         labelTituloMesa.setText("Gerenciando Mesa " + mesa.getNumMesa());
         atualizarListaComandas();
+
+        this.listaComandas.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> atualizarVisibilidadeBotoes(newValue)
+        );
+        atualizarVisibilidadeBotoes(null);
+    }
+
+    private void atualizarVisibilidadeBotoes(Comanda selecionada) {
+        if (selecionada == null) {
+            // Nenhuma comanda selecionada
+            botaoAbrirComanda.setVisible(false);
+            botaoReabrirComanda.setVisible(false);
+        } else if (selecionada.isFechada()) {
+            // Comanda FECHADA selecionada
+            botaoAbrirComanda.setVisible(false);
+            botaoReabrirComanda.setVisible(true); // Mostra "Reabrir"
+        } else {
+            // Comanda ABERTA selecionada
+            botaoAbrirComanda.setVisible(true); // Mostra "Abrir"
+            botaoReabrirComanda.setVisible(false);
+        }
+    }
+
+    @FXML
+    private void reabrirComandaSelecionada() {
+        Comanda selecionada = listaComandas.getSelectionModel().getSelectedItem();
+
+        if (selecionada != null && selecionada.isFechada()) {
+            selecionada.reabrir(); // Lógica de reabrir
+
+            // Atualiza a UI
+            atualizarListaComandas(); // O texto "(FECHADA)" vai sumir
+            atualizarVisibilidadeBotoes(selecionada); // Os botões vão trocar
+
+            mostrarAlerta("Sucesso", "A comanda #" + selecionada.getId() + " foi reaberta.");
+        }
     }
 
     private void atualizarListaComandas() {

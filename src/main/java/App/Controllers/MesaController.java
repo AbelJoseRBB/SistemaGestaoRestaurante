@@ -147,7 +147,7 @@ public class MesaController extends BaseController{
 
     @FXML
     private void abrirDashboardMesas() {
-        carregarMesas();
+        atualizarVisualDasMesas();
         painelRaiz.setCenter(this.centroOriginalMesas);
     }
 

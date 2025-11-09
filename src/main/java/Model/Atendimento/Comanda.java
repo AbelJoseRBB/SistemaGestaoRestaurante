@@ -56,12 +56,22 @@ public class Comanda {
         fechada = true;
     }
 
+    public void reabrir() {
+        this.fechada = false;
+    }
+
     public List<Pedido> getPedidos(){
         return this.pedidos;
     }
 
     @Override
     public String toString() {
-        return String.format("Comanda #%d (%s) - Total: R$ %.2f", id, clienteNome, calcularTotal());
+        // Ex: "Comanda #1 - Cliente: Abel (FECHADA)"
+        // ou  "Comanda #2 - Cliente: Jose (ABERTA)"
+        return String.format("Comanda %d - Cliente: %s (%s)",
+                id, // (Assumindo que você tem um 'numero')
+                getClienteNome(),
+                fechada ? "FECHADA" : "ABERTA"
+        );
     }
 }
