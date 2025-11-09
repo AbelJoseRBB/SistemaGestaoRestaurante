@@ -1,17 +1,25 @@
 package App.Controllers;
 
+import App.Persistencia.IPersistencia;
+import App.Persistencia.PersistenceService;
+import Model.Produtos.CategoriaProduto;
 import Model.Produtos.Produto;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.TilePane;
+import javafx.geometry.Insets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
-public class ProdutosController {
+public class ProdutosController extends BaseController{
 
     @FXML
     private ListView<Produto> listaProdutos;
@@ -25,8 +33,10 @@ public class ProdutosController {
     private TextField campoPreco;
     @FXML
     private TextField campoEstoque;
+    @FXML
+    private ComboBox<CategoriaProduto> campoCategoria;
 
-    private PersistenceService persistenceService = new PersistenceService();
+    private IPersistencia persistenceService = new PersistenceService();
 
     // Esta é a LISTA CENTRAL que vem do MesaController
     private List<Produto> listaProdutosCentral;
@@ -51,6 +61,8 @@ public class ProdutosController {
                 }
         );
 
+        campoCategoria.getItems().setAll(CategoriaProduto.values());
+
         limparCampos(); // Começa com os campos limpos
     }
 
@@ -69,6 +81,7 @@ public class ProdutosController {
         campoDescricao.setText(produto.getDescricao());
         campoPreco.setText(String.format("%.2f", produto.getPreco()));
         campoEstoque.setText(String.valueOf(produto.getEstoque()));
+        campoCategoria.setValue(produto.getCategoria());
     }
 
     @FXML
@@ -79,6 +92,7 @@ public class ProdutosController {
             String descricao = campoDescricao.getText();
             double preco = Double.parseDouble(campoPreco.getText().replace(",", "."));
             int estoque = Integer.parseInt(campoEstoque.getText());
+            CategoriaProduto categoria = campoCategoria.getValue();
 
             if (nome == null || nome.trim().isEmpty()) {
                 mostrarAlerta("Erro", "O nome do produto é obrigatório.");
@@ -87,7 +101,7 @@ public class ProdutosController {
 
             if (this.produtoSelecionado == null) {
                 // Se não há produto selecionado, é um PRODUTO NOVO
-                Produto novoProduto = new Produto(nome, descricao, preco, estoque);
+                Produto novoProduto = new Produto(nome, descricao, preco, estoque, categoria);
 
                 // Adiciona na lista CENTRAL e na lista VISUAL
                 this.listaProdutosCentral.add(novoProduto);
@@ -99,6 +113,7 @@ public class ProdutosController {
                 this.produtoSelecionado.setDescricao(descricao); // <-- Assumindo que você tem um setDescricao()
                 this.produtoSelecionado.setPreco(preco);
                 this.produtoSelecionado.setEstoque(estoque);
+                this.produtoSelecionado.setCategoria(categoria);
 
                 // Atualiza o item na lista visual
                 this.listaProdutos.refresh();
@@ -139,13 +154,7 @@ public class ProdutosController {
         campoDescricao.clear();
         campoPreco.clear();
         campoEstoque.clear();
+        campoCategoria.setValue(null);
     }
 
-    private void mostrarAlerta(String titulo, String msg) {
-        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(msg);
-        alerta.showAndWait();
-    }
 }

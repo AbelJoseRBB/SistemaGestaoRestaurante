@@ -1,15 +1,14 @@
 package App.Controllers;
 
-import Model.Comanda;
-import Model.Mesa;
-import Model.Produtos.Produto;
+import Model.Atendimento.Comanda;
+import Model.Atendimento.Mesa;
+import Model.Produtos.ItemVendavel;
 import Model.Usuarios.Usuario;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog; // <-- 1. IMPORTA O POP-UP DE TEXTO
@@ -19,7 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional; // <-- 2. IMPORTA O "Optional" (para o pop-up)
 
-public class GerenciarMesaController {
+public class GerenciarMesaController extends BaseController{
 
     @FXML
     private Label labelTituloMesa;
@@ -28,9 +27,9 @@ public class GerenciarMesaController {
 
     private Mesa mesa;
     private Usuario atendente;
-    private List<Produto> produtosDisponiveis;
+    private List<ItemVendavel> produtosDisponiveis;
 
-    public void inicializar(Mesa mesa, Usuario atendente, List<Produto> produtos) {
+    public void inicializar(Mesa mesa, Usuario atendente, List<ItemVendavel> produtos) {
         this.mesa = mesa;
         this.atendente = atendente;
         this.produtosDisponiveis = produtos;
@@ -107,13 +106,5 @@ public class GerenciarMesaController {
             e.printStackTrace();
             mostrarAlerta("Erro", "Não foi possível abrir a tela da comanda.");
         }
-    }
-
-    private void mostrarAlerta(String titulo, String msg) {
-        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(msg);
-        alerta.showAndWait();
     }
 }

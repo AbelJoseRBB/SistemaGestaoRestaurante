@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -28,7 +29,10 @@
 
             <VBox spacing="10" style="-fx-padding: 10;">
                 <Label text="Selecionar Produto" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
-                <ListView fx:id="listaProdutosDisponiveis" VBox.vgrow="ALWAYS" />
+
+                <TabPane fx:id="tabPaneCategorias" VBox.vgrow="ALWAYS" style="-fx-font-size: 14px;" />
+                <Label fx:id="labelItemSelecionado" style="-fx-font-weight: bold; -fx-text-fill: #007bff;" text="Selecione um item..." />
+
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <Label text="Quantidade:" />
                     <Spinner fx:id="spinnerQuantidade" initialValue="1" min="1" max="99" prefWidth="80" editable="true" />

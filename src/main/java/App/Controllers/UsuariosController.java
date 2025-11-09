@@ -1,12 +1,12 @@
 package App.Controllers;
 
+import App.Persistencia.IPersistencia;
 import Model.Usuarios.Garcom;
 import Model.Usuarios.Interno;
 import Model.Usuarios.Usuario;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -15,7 +15,7 @@ import javafx.scene.control.ToggleGroup;
 
 import java.util.List;
 
-public class UsuariosController {
+public class UsuariosController extends BaseController{
 
     @FXML
     private ListView<Usuario> listaUsuarios;
@@ -34,11 +34,11 @@ public class UsuariosController {
 
     private List<Usuario> listaUsuariosCentral;
     private ObservableList<Usuario> observableListUsuarios;
-    private PersistenceService persistenceService; // <-- NOVO: Para salvar
+    private IPersistencia persistenceService; // <-- NOVO: Para salvar
     private Usuario usuarioSelecionado = null;
 
     // Inicializa com a lista e o service
-    public void inicializar(List<Usuario> listaUsuariosCentral, PersistenceService persistenceService) {
+    public void inicializar(List<Usuario> listaUsuariosCentral, IPersistencia persistenceService) {
         this.listaUsuariosCentral = listaUsuariosCentral;
         this.persistenceService = persistenceService; // Guarda o service
 
@@ -153,11 +153,4 @@ public class UsuariosController {
         grupoTipo.selectToggle(null);
     }
 
-    private void mostrarAlerta(String titulo, String msg) {
-        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(msg);
-        alerta.showAndWait();
-    }
 }

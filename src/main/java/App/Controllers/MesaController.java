@@ -1,9 +1,11 @@
 package App.Controllers;
 
-import Model.Comanda;
-import Model.Mesa;
+import App.Persistencia.IPersistencia;
+import App.Persistencia.PersistenceService;
+import Model.Atendimento.Mesa;
+import Model.Produtos.ItemVendavel;
 import Model.Produtos.Produto;
-import Model.Config;
+import Model.Sistema.Config;
 import Model.Usuarios.Interno;
 import Model.Usuarios.Usuario;
 
@@ -12,7 +14,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -25,7 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MesaController {
+public class MesaController extends BaseController{
 
     @FXML
     private BorderPane painelRaiz;
@@ -47,11 +48,11 @@ public class MesaController {
     private List<Usuario> listaDeUsuarios;
 
     private Config config;
-    private PersistenceService persistenceService;
+    private IPersistencia persistenceService;
 
     // --- MUDANÇA PRINCIPAL: ASSINATURA COMPLETA ---
     // Recebe TODAS as listas e serviços do LoginController
-    public void setUsuarioLogado(Usuario usuario, List<Usuario> usuarios, List<Produto> produtos, Config config, PersistenceService service) {
+    public void setUsuarioLogado(Usuario usuario, List<Usuario> usuarios, List<Produto> produtos, Config config, IPersistencia service) {
         this.usuarioLogado = usuario;
         this.listaDeUsuarios = usuarios;
         this.listaDeProdutos = produtos;
@@ -115,7 +116,8 @@ public class MesaController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/GerenciarMesaView.fxml"));
             Parent root = loader.load();
             GerenciarMesaController controller = loader.getController();
-            controller.inicializar(mesaSelecionada, this.usuarioLogado, this.listaDeProdutos);
+            List<ItemVendavel> itensVendaveis = new ArrayList<>(this.persistenceService.carregarProdutos());
+            controller.inicializar(mesaSelecionada, this.usuarioLogado, itensVendaveis);
             Stage gerenciarStage = new Stage();
             gerenciarStage.initModality(Modality.APPLICATION_MODAL);
             gerenciarStage.setTitle("Gerenciando Mesa " + numeroMesa);
@@ -172,7 +174,7 @@ public class MesaController {
             UsuariosController controller = loader.getController();
 
             // --- CORREÇÃO FINAL AQUI ---
-            controller.inicializar(this.listaDeUsuarios, this.persistenceService);
+            controller.inicializar(this.listaDeUsuarios, (PersistenceService) this.persistenceService);
 
             painelRaiz.setCenter(painelUsuarios);
 
@@ -180,13 +182,5 @@ public class MesaController {
             e.printStackTrace();
             mostrarAlerta("Erro", "Não foi possível carregar a tela de usuários.");
         }
-    }
-
-    private void mostrarAlerta(String titulo, String msg) {
-        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(msg);
-        alerta.showAndWait();
     }
 }

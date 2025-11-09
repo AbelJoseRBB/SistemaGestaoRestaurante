@@ -19,8 +19,12 @@ module restaurante.sistemagestaorestaurante {
     exports App.Controllers;
     opens App.Controllers to javafx.fxml;
 
-    exports Model;
-    opens Model to com.google.gson;
     opens Model.Usuarios to com.google.gson;
     opens Model.Produtos to com.google.gson;
+    exports App.Persistencia;
+    opens App.Persistencia to javafx.fxml;
+    exports Model.Atendimento;
+    opens Model.Atendimento to com.google.gson;
+    exports Model.Sistema;
+    opens Model.Sistema to com.google.gson;
 }

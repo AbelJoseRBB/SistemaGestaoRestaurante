@@ -4,27 +4,39 @@
     "nome": "Cerveja",
     "preco": 5.0,
     "estoque": 100,
-    "descricao": "Lata 350ml"
+    "descricao": "Lata 350ml",
+    "categoria": "BEBIDA"
   },
   {
     "id": 2,
     "nome": "Agua",
     "preco": 3.0,
     "estoque": 100,
-    "descricao": "Garrafa 500ml"
+    "descricao": "Garrafa 500ml",
+    "categoria": "BEBIDA"
   },
   {
     "id": 3,
     "nome": "Petisco",
     "preco": 25.0,
     "estoque": 50,
-    "descricao": "Porção de Batata"
+    "descricao": "Porção de Batata",
+    "categoria": "PETISCO"
   },
   {
     "id": 4,
     "nome": "Refrigerante",
     "preco": 4.5,
     "estoque": 80,
-    "descricao": "Lata 350ml"
+    "descricao": "Lata 350ml",
+    "categoria": "BEBIDA"
+  },
+  {
+    "id": 5,
+    "nome": "das",
+    "preco": 312.0,
+    "estoque": 312,
+    "descricao": "das",
+    "categoria": "OUTRO"
   }
 ]

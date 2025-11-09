@@ -1,19 +1,26 @@
 package Model.Produtos;
-public class Produto {
+import Model.Produtos.CategoriaProduto;
+
+public class Produto implements ItemVendavel {
 
     private final int id;
     private static int proximoId = 1;
     private String nome;
     private double preco;
-    private int estoque; // deixar assim por equanto
+    private int estoque;
     private String descricao;
 
-    public Produto(String nome, String descricao, double preco, int estoque){
+    // 2. ADICIONAR O NOVO CAMPO
+    private CategoriaProduto categoria;
+
+    // 3. ATUALIZAR O CONSTRUTOR
+    public Produto(String nome, String descricao, double preco, int estoque, CategoriaProduto categoria) {
         this.id = proximoId++;
         this.nome = nome;
         this.descricao = descricao;
         this.preco = preco;
         this.estoque = estoque;
+        this.categoria = categoria; // <-- Linha adicionada
     }
 
     public double getPreco() {
@@ -59,8 +66,19 @@ public class Produto {
         this.descricao = descricao;
     }
 
+    public CategoriaProduto getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(CategoriaProduto categoria) {
+        this.categoria = categoria;
+    }
+
+    // 5. ATUALIZAR O toString() (Opcional, mas recomendado)
     @Override
     public String toString() {
-        return String.format("[%d] %s - R$ %.2f (estoque: %d)", id, nome, preco, estoque);
+        // Ex: "[Bebida] [1] Cerveja - R$ 5,00 (estoque: 100)"
+        return String.format("[%s] [%d] %s - R$ %.2f (estoque: %d)",
+                categoria, id, nome, preco, estoque);
     }
 }

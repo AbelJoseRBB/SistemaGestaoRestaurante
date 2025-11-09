@@ -1,6 +1,6 @@
-package App.Controllers;
+package App.Persistencia;
 
-import Model.Config;
+import Model.Sistema.Config;
 import Model.Produtos.Produto;
 import Model.Usuarios.Garcom; // Importa o Garcom
 import Model.Usuarios.Interno; // Importa o Interno
@@ -24,7 +24,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersistenceService {
+public class PersistenceService implements IPersistencia {
 
     private static final String CONFIG_FILE = "config.json";
     private static final String USUARIOS_FILE = "usuarios.json"; // <-- NOVO ARQUIVO
@@ -32,9 +32,7 @@ public class PersistenceService {
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    // --- LÓGICA DAS CONFIGURAÇÕES (SEM MUDANÇAS) ---
-
-
+    @Override
     public Config carregarConfig() {
         File configFile = new File(CONFIG_FILE);
 
@@ -55,6 +53,7 @@ public class PersistenceService {
         }
     }
 
+    @Override
     public void salvarConfig(Config config) {
         try (Writer writer = new FileWriter(CONFIG_FILE)) {
             gson.toJson(config, writer);
@@ -64,14 +63,7 @@ public class PersistenceService {
         }
     }
 
-    // --- LÓGICA DE USUÁRIOS (NOVOS MÉTODOS) ---
-
-    /**
-     * Tenta carregar a lista de Usuários do arquivo "usuarios.json".
-     * Se o arquivo não existir, cria a lista padrão (joao, admin).
-     */
-
-
+    @Override
     public void salvarProdutos(List<Produto> produtos) {
         try (Writer writer = new FileWriter(PRODUTOS_FILE)) {
             gson.toJson(produtos, writer);
@@ -81,6 +73,7 @@ public class PersistenceService {
         }
     }
 
+    @Override
     public List<Produto> carregarProdutos() {
         File produtoFile = new File(PRODUTOS_FILE);
         if (produtoFile.exists()) {
@@ -107,6 +100,7 @@ public class PersistenceService {
         }
     }
 
+    @Override
     public List<Usuario> carregarUsuarios() {
         File usuariosFile = new File(USUARIOS_FILE);
 
@@ -143,9 +137,7 @@ public class PersistenceService {
         }
     }
 
-    /**
-     * Salva a lista de Usuários de volta no arquivo "usuarios.json".
-     */
+    @Override
     public void salvarUsuarios(List<Usuario> usuarios) {
         try (Writer writer = new FileWriter(USUARIOS_FILE)) {
             gson.toJson(usuarios, writer);
@@ -155,9 +147,7 @@ public class PersistenceService {
         }
     }
 
-    /**
-     * Cria a lista padrão de usuários se o arquivo não existir.
-     */
+
     private List<Usuario> criarUsuariosPadraoESalvar() {
         List<Usuario> padrao = new ArrayList<>();
         padrao.add(new Interno("admin", "admin"));

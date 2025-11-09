@@ -1,11 +1,11 @@
 package App.Controllers;
 
-import Model.Config;
+import App.Persistencia.IPersistencia;
+import Model.Sistema.Config;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
-public class ConfigController {
+public class ConfigController extends BaseController{
 
     @FXML
     private TextField campoNumMesas;
@@ -19,11 +19,11 @@ public class ConfigController {
     private Config configAtual;
 
     // --- MUDANÇA: Recebe o Service ---
-    private PersistenceService persistenceService;
+    private IPersistencia persistenceService;
     // --- FIM DA MUDANÇA ---
 
     // --- MUDANÇA: Assinatura do método mudou ---
-    public void inicializar(Config config, PersistenceService service) {
+    public void inicializar(Config config, IPersistencia service) {
         this.configAtual = config;
         this.persistenceService = service; // Guarda o service
         carregarDadosNaTela();
@@ -62,13 +62,5 @@ public class ConfigController {
         } catch (Exception e) {
             mostrarAlerta("Erro", "Ocorreu um erro: " + e.getMessage());
         }
-    }
-
-    private void mostrarAlerta(String titulo, String msg) {
-        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(msg);
-        alerta.showAndWait();
     }
 }

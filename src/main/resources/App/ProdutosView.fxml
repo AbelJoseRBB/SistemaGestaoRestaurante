@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.ComboBox?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controllers.ProdutosController" style="-fx-padding: 10;">
     <top>
         <Label text="Gerenciador de Produtos" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;" />
@@ -32,14 +33,22 @@
                 <Label text="Nome:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
                 <TextField fx:id="campoNome" GridPane.rowIndex="0" GridPane.columnIndex="1" />
 
-                <Label text="Descrição:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-                <TextField fx:id="campoDescricao" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                <Label text="Categoria:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                <ComboBox fx:id="campoCategoria" prefWidth="200" GridPane.rowIndex="1" GridPane.columnIndex="1" />
 
-                <Label text="Preço (R$):" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-                <TextField fx:id="campoPreco" promptText="ex: 5.50" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                <Label text="Descrição:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                <TextField fx:id="campoDescricao" GridPane.rowIndex="2" GridPane.columnIndex="1" />
 
-                <Label text="Estoque:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
-                <TextField fx:id="campoEstoque" promptText="ex: 100" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                <Label text="Preço (R$):" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                <TextField fx:id="campoPreco" promptText="ex: 5.50" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+                <Label text="Estoque:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                <TextField fx:id="campoEstoque" promptText="ex: 100" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+                <columnConstraints>
+                    <ColumnConstraints hgrow="NEVER" />
+                    <ColumnConstraints hgrow="ALWAYS" />
+                </columnConstraints>
             </GridPane>
 
             <HBox spacing="10">

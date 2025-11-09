@@ -1,6 +1,6 @@
 package Model.Usuarios;
 
-public class Usuario {
+public abstract class Usuario {
 
     private String nome, senha;
     protected boolean acessoConfig = false;

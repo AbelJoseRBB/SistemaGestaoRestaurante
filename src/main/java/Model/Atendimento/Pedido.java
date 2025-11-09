@@ -1,19 +1,19 @@
-package Model;
+package Model.Atendimento;
 import java.util.Date;
 
+import Model.Produtos.ItemVendavel;
 import Model.Usuarios.Usuario;
-import Model.Produtos.Produto;
 
 public class Pedido {
     private Usuario atendente;
-    private Produto produtoPedido;
+    private ItemVendavel item;
     private int quantidade;
     private String observacao;
     private Date horario;
 
-    public Pedido(Produto produto, int quantidade, String observacao, Usuario atendente){
+    public Pedido(ItemVendavel item, int quantidade, String observacao, Usuario atendente){
         if(quantidade <= 0 ) throw new IllegalArgumentException("Quantidade invalida");
-        this.produtoPedido = produto;
+        this.item = item;
         this.quantidade = quantidade;
         this.observacao = observacao;
         this.atendente = atendente;
@@ -24,8 +24,8 @@ public class Pedido {
         return atendente;
     }
 
-    public Produto getProdutoPedido() {
-        return produtoPedido;
+    public ItemVendavel getItem() {
+        return item;
     }
 
     public int getQuantidade() {
@@ -41,12 +41,12 @@ public class Pedido {
     }
 
     public double getSubtotal(){
-        return  produtoPedido.getPreco() * quantidade;
+        return  item.getPreco() * quantidade;
     }
 
     @Override
     public String toString() {
-        return String.format("%s x%d = R$ %.2f %s", produtoPedido.getNome(), quantidade, getSubtotal(),
+        return String.format("%s x%d = R$ %.2f %s", item.getNome(), quantidade, getSubtotal(),
                 (observacao == null || observacao.isEmpty()) ? "" : ("(" + observacao + ")"));
     }
 

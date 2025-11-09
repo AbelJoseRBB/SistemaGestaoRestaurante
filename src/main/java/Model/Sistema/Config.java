@@ -1,4 +1,4 @@
-package Model;
+package Model.Sistema;
 
 public class Config {
     private int numeroDeMesas;
