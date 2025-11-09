@@ -1,5 +1,6 @@
 package App.Persistencia;
 
+import Model.Produtos.CategoriaProduto;
 import Model.Sistema.Config;
 import Model.Produtos.Produto;
 import Model.Usuarios.Garcom; // Importa o Garcom
@@ -29,8 +30,52 @@ public class PersistenceService implements IPersistencia {
     private static final String CONFIG_FILE = "config.json";
     private static final String USUARIOS_FILE = "usuarios.json"; // <-- NOVO ARQUIVO
     private static final String PRODUTOS_FILE = "produtos.json";
-
+    private static final String CATEGORIAS_FILE = "categorias.json";
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+    public List<CategoriaProduto> carregarCategorias() {
+        File categoriasFile = new File(CATEGORIAS_FILE);
+        if (categoriasFile.exists()) {
+            try (Reader reader = new FileReader(categoriasFile)) {
+
+                Type listaTipo = new TypeToken<ArrayList<CategoriaProduto>>() {}.getType();
+                List<CategoriaProduto> categorias = gson.fromJson(reader, listaTipo);
+
+                System.out.println("Categorias carregadas de " + CATEGORIAS_FILE);
+
+                // --- A CORREÇÃO ESTÁ AQUI ---
+                // Se o arquivo estiver vazio, o GSON retorna null.
+                // Nós garantimos que vamos retornar uma lista vazia no lugar.
+                if (categorias == null) {
+                    return new ArrayList<>();
+                } else {
+                    return categorias;
+                }
+                // --- FIM DA CORREÇÃO ---
+
+            } catch (IOException | IllegalStateException e) {
+                System.out.println("Erro ao ler " + CATEGORIAS_FILE);
+                return new ArrayList<>(); // Retorna vazia (Correto)
+            }
+        } else {
+            System.out.println(CATEGORIAS_FILE + " não encontrado, criando lista padrão.");
+            List<CategoriaProduto> padrao = new ArrayList<>();
+            padrao.add(new CategoriaProduto("Bebidas"));
+            padrao.add(new CategoriaProduto("Pratos"));
+            padrao.add(new CategoriaProduto("Sobremesas"));
+            salvarCategorias(padrao); // Salva o novo arquivo
+            return padrao;
+        }
+    }
+
+    public void salvarCategorias(List<CategoriaProduto> categorias) {
+        try (Writer writer = new FileWriter(CATEGORIAS_FILE)) {
+            gson.toJson(categorias, writer);
+            System.out.println("Categorias salvas em " + CATEGORIAS_FILE);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar " + CATEGORIAS_FILE + ": " + e.getMessage());
+        }
+    }
 
     @Override
     public Config carregarConfig() {

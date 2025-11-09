@@ -5,7 +5,7 @@
     "preco": 5.0,
     "estoque": 100,
     "descricao": "Lata 350ml",
-    "categoria": "BEBIDA"
+    "categoriaNome": "Bebidas"
   },
   {
     "id": 2,
@@ -13,7 +13,7 @@
     "preco": 3.0,
     "estoque": 100,
     "descricao": "Garrafa 500ml",
-    "categoria": "BEBIDA"
+    "categoriaNome": "Bebidas"
   },
   {
     "id": 3,
@@ -21,7 +21,7 @@
     "preco": 25.0,
     "estoque": 50,
     "descricao": "Porção de Batata",
-    "categoria": "PETISCO"
+    "categoriaNome": "Petiscos"
   },
   {
     "id": 4,
@@ -29,7 +29,7 @@
     "preco": 4.5,
     "estoque": 80,
     "descricao": "Lata 350ml",
-    "categoria": "BEBIDA"
+    "categoriaNome": "Bebidas"
   },
   {
     "id": 5,
@@ -37,6 +37,6 @@
     "preco": 312.0,
     "estoque": 312,
     "descricao": "das",
-    "categoria": "OUTRO"
+    "categoriaNome": "Outro"
   }
 ]

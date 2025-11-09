@@ -1,21 +1,28 @@
 package Model.Produtos;
 
-public enum CategoriaProduto {
-    BEBIDA("Bebida"),
-    PRATO_PRINCIPAL("Prato Principal"),
-    SOBREMESA("Sobremesa"),
-    PETISCO("Petisco"),
-    OUTRO("Outro"); // Categoria padrão
+public class CategoriaProduto {
 
-    private final String descricao;
+    private String nome;
 
-    CategoriaProduto(String descricao) {
-        this.descricao = descricao;
+    // Construtor vazio para o GSON
+    public CategoriaProduto() {}
+
+    public CategoriaProduto(String nome) {
+        this.nome = nome;
     }
 
-    // Isso é útil para mostrar o nome bonito na tela
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    // O toString() é MUITO importante
+    // É ele que o ComboBox vai mostrar!
     @Override
     public String toString() {
-        return this.descricao;
+        return this.nome;
     }
 }

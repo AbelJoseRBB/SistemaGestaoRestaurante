@@ -97,41 +97,54 @@ public class ComandaController extends BaseController {
     private void construirAbasDeProdutos() {
         tabPaneCategorias.getTabs().clear();
         labelItemSelecionado.setText("Selecione um item...");
+        this.produtoSelecionado = null;
 
-        // 1. Agrupa todos os produtos por sua categoria
-        Map<CategoriaProduto, List<Produto>> produtosPorCategoria = new HashMap<>();
+        // --- MUDANÇA PRINCIPAL AQUI ---
+
+        // 1. O Mapa agora usa String (o nome da categoria) como chave,
+        //    e não mais o objeto 'CategoriaProduto'
+        Map<String, List<Produto>> produtosPorCategoria = new HashMap<>();
+
         for (ItemVendavel item : this.itensDisponiveis) {
-            // Só podemos adicionar 'Produtos' ao menu, 'Servicos' seriam adicionados de outra forma
             if (item instanceof Produto) {
                 Produto p = (Produto) item;
-                // 'computeIfAbsent' cria a lista se ela não existir e então adiciona o produto
+
+                // 2. Usamos getCategoriaNome() (a String) como a chave
+                String nomeCat = p.getCategoriaNome();
+
+                // Segurança: Se um produto for salvo sem categoria, não o adicione
+                if (nomeCat == null || nomeCat.trim().isEmpty()) {
+                    continue;
+                }
+
+                // A lógica de adicionar ao mapa continua igual
                 produtosPorCategoria
-                        .computeIfAbsent(p.getCategoria(), k -> new ArrayList<>())
+                        .computeIfAbsent(nomeCat, k -> new ArrayList<>())
                         .add(p);
             }
         }
 
-        // 2. Cria uma Aba (Tab) para cada categoria no mapa
-        for (Map.Entry<CategoriaProduto, List<Produto>> entry : produtosPorCategoria.entrySet()) {
-            CategoriaProduto categoria = entry.getKey();
+        // 3. Cria a aba a partir da String (nome da categoria)
+        for (Map.Entry<String, List<Produto>> entry : produtosPorCategoria.entrySet()) {
+            String nomeCategoria = entry.getKey(); // <-- A chave agora é uma String
             List<Produto> produtosDaAba = entry.getValue();
 
-            Tab tab = new Tab(categoria.toString()); // Nome da aba (ex: "Bebidas")
-            tab.setClosable(false); // Impede que o usuário feche a aba
+            Tab tab = new Tab(nomeCategoria); // <-- Usa a String direto
+            tab.setClosable(false);
 
-            // 3. Cria o grid de botões (TilePane)
+            // O resto da lógica para criar o TilePane e os botões
+            // é EXATAMENTE A MESMA de antes.
+
             TilePane grid = new TilePane();
             grid.setPadding(new Insets(10));
-            grid.setHgap(8); // Espaçamento horizontal
-            grid.setVgap(8); // Espaçamento vertical
+            grid.setHgap(8);
+            grid.setVgap(8);
 
-            // 4. Cria um botão para cada produto na categoria
             for (Produto p : produtosDaAba) {
                 Button btnProduto = new Button(p.getNome());
-                btnProduto.setPrefSize(100, 80); // Tamanho do botão
+                btnProduto.setPrefSize(100, 80); // Tamanho dos botões
                 btnProduto.setWrapText(true); // Permite que o texto quebre a linha
 
-                // 5. Ação do botão: guarda o produto selecionado e atualiza o label
                 btnProduto.setOnAction(e -> {
                     this.produtoSelecionado = p;
                     labelItemSelecionado.setText("Selecionado: " + p.getNome());
@@ -140,8 +153,8 @@ public class ComandaController extends BaseController {
                 grid.getChildren().add(btnProduto);
             }
 
-            tab.setContent(grid); // Adiciona o grid à aba
-            tabPaneCategorias.getTabs().add(tab); // Adiciona a aba ao TabPane
+            tab.setContent(grid);
+            tabPaneCategorias.getTabs().add(tab);
         }
     }
 

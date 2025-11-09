@@ -9,18 +9,16 @@ public class Produto implements ItemVendavel {
     private double preco;
     private int estoque;
     private String descricao;
-
-    // 2. ADICIONAR O NOVO CAMPO
-    private CategoriaProduto categoria;
+    private String categoriaNome;
 
     // 3. ATUALIZAR O CONSTRUTOR
-    public Produto(String nome, String descricao, double preco, int estoque, CategoriaProduto categoria) {
+    public Produto(String nome, String descricao, double preco, int estoque, String categoriaNome) {
         this.id = proximoId++;
         this.nome = nome;
         this.descricao = descricao;
         this.preco = preco;
         this.estoque = estoque;
-        this.categoria = categoria; // <-- Linha adicionada
+        this.categoriaNome = categoriaNome; // <-- Linha adicionada
     }
 
     public double getPreco() {
@@ -66,19 +64,16 @@ public class Produto implements ItemVendavel {
         this.descricao = descricao;
     }
 
-    public CategoriaProduto getCategoria() {
-        return categoria;
+    public String getCategoriaNome() { // <-- MUDANÇA
+        return categoriaNome;
     }
 
-    public void setCategoria(CategoriaProduto categoria) {
-        this.categoria = categoria;
+    public void setCategoriaNome(String categoriaNome) { // <-- MUDANÇA
+        this.categoriaNome = categoriaNome;
     }
 
-    // 5. ATUALIZAR O toString() (Opcional, mas recomendado)
     @Override
     public String toString() {
-        // Ex: "[Bebida] [1] Cerveja - R$ 5,00 (estoque: 100)"
-        return String.format("[%s] [%d] %s - R$ %.2f (estoque: %d)",
-                categoria, id, nome, preco, estoque);
+        return String.format("[%s] [%d] %s - R$ %.2f (estoque: %d)", categoriaNome, id, nome, preco, estoque); // <-- MUDANÇA
     }
 }

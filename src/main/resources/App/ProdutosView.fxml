@@ -34,7 +34,10 @@
                 <TextField fx:id="campoNome" GridPane.rowIndex="0" GridPane.columnIndex="1" />
 
                 <Label text="Categoria:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-                <ComboBox fx:id="campoCategoria" prefWidth="200" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                <HBox spacing="5" alignment="CENTER_LEFT" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                    <ComboBox fx:id="campoCategoria" prefWidth="170" />
+                    <Button onAction="#adicionarNovaCategoria" text="+" style="-fx-font-weight: bold;" />
+                </HBox>
 
                 <Label text="Descrição:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
                 <TextField fx:id="campoDescricao" GridPane.rowIndex="2" GridPane.columnIndex="1" />

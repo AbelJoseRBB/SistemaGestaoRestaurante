@@ -158,7 +158,7 @@ public class MesaController extends BaseController{
             Node painelProdutos = loader.load();
             ProdutosController controller = loader.getController();
             this.listaDeProdutos = persistenceService.carregarProdutos();
-            controller.inicializar(this.listaDeProdutos);
+            controller.inicializar(this.listaDeProdutos, this.persistenceService);
             painelRaiz.setCenter(painelProdutos);
         } catch (IOException e) {
             e.printStackTrace();
