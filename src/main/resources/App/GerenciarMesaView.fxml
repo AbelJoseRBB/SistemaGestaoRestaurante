@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
+
 <?import javafx.scene.layout.StackPane?> <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controllers.GerenciarMesaController" prefHeight="400.0" prefWidth="350.0">
     <top>
         <Label fx:id="labelTituloMesa" text="Gerenciando Mesa X" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 15;" />

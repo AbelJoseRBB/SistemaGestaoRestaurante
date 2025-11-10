@@ -8,7 +8,7 @@ public class Comanda {
     private final int id;
     private String clienteNome;
     private boolean fechada;
-    private List<Pedido> pedidos; // A lista original
+    private List<Pedido> pedidos;
 
     public Comanda() {
         this.id = proximoId++;
@@ -66,12 +66,6 @@ public class Comanda {
 
     @Override
     public String toString() {
-        // Ex: "Comanda #1 - Cliente: Abel (FECHADA)"
-        // ou  "Comanda #2 - Cliente: Jose (ABERTA)"
-        return String.format("Comanda %d - Cliente: %s (%s)",
-                id, // (Assumindo que você tem um 'numero')
-                getClienteNome(),
-                fechada ? "FECHADA" : "ABERTA"
-        );
+        return String.format("Comanda %d - Cliente: %s (%s)", id, getClienteNome(), fechada ? "FECHADA" : "ABERTA");
     }
 }

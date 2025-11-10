@@ -12,12 +12,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextInputDialog; // <-- 1. IMPORTA O POP-UP DE TEXTO
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional; // <-- 2. IMPORTA O "Optional" (para o pop-up)
+import java.util.Optional;
 
 public class GerenciarMesaController extends BaseController{
 
@@ -49,16 +49,13 @@ public class GerenciarMesaController extends BaseController{
 
     private void atualizarVisibilidadeBotoes(Comanda selecionada) {
         if (selecionada == null) {
-            // Nenhuma comanda selecionada
             botaoAbrirComanda.setVisible(false);
             botaoReabrirComanda.setVisible(false);
         } else if (selecionada.isFechada()) {
-            // Comanda FECHADA selecionada
             botaoAbrirComanda.setVisible(false);
-            botaoReabrirComanda.setVisible(true); // Mostra "Reabrir"
+            botaoReabrirComanda.setVisible(true);
         } else {
-            // Comanda ABERTA selecionada
-            botaoAbrirComanda.setVisible(true); // Mostra "Abrir"
+            botaoAbrirComanda.setVisible(true);
             botaoReabrirComanda.setVisible(false);
         }
     }
@@ -68,11 +65,10 @@ public class GerenciarMesaController extends BaseController{
         Comanda selecionada = listaComandas.getSelectionModel().getSelectedItem();
 
         if (selecionada != null && selecionada.isFechada()) {
-            selecionada.reabrir(); // Lógica de reabrir
+            selecionada.reabrir();
 
-            // Atualiza a UI
-            atualizarListaComandas(); // O texto "(FECHADA)" vai sumir
-            atualizarVisibilidadeBotoes(selecionada); // Os botões vão trocar
+            atualizarListaComandas();
+            atualizarVisibilidadeBotoes(selecionada);
 
             mostrarAlerta("Sucesso", "A comanda #" + selecionada.getId() + " foi reaberta.");
         }
@@ -83,45 +79,29 @@ public class GerenciarMesaController extends BaseController{
         listaComandas.getItems().addAll(mesa.getComandas());
     }
 
-    // --- A GRANDE MUDANÇA ESTÁ AQUI ---
     @FXML
     private void adicionarNovaComanda() {
 
-        // 1. Pergunta o nome do cliente PRIMEIRO
-        TextInputDialog dialog = new TextInputDialog(); // Pode botar um nome padrão ex: "Cliente"
+        TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Nova Comanda");
         dialog.setHeaderText("Adicionando nova comanda para a Mesa " + mesa.getNumMesa());
-        dialog.setContentText("Por favor, digite o nome do cliente:");
+        dialog.setContentText("Digite o nome do cliente:");
 
-        // 2. Mostra o pop-up e espera o usuário digitar
         Optional<String> result = dialog.showAndWait();
 
-        // 3. Verifica se o usuário digitou um nome e clicou OK
         if (result.isPresent() && !result.get().trim().isEmpty()){
-            String nomeCliente = result.get(); // Pega o nome
+            String nomeCliente = result.get();
 
-            // 4. Cria o objeto Comanda
             Comanda novaComanda = new Comanda();
-
-            // 5. DEFINE O NOME DO CLIENTE IMEDIATAMENTE
             novaComanda.setClienteNome(nomeCliente);
-
-            // 6. Adiciona ele na Mesa
             this.mesa.adicionarComanda(novaComanda);
 
-            // 7. Atualiza a lista visual (agora vai mostrar o nome certo no "toString()")
             atualizarListaComandas();
 
-            // 8. Abre a tela de edição para essa comanda nova
-            // (Ela já vai abrir com o nome do cliente preenchido)
             abrirJanelaDaComanda(novaComanda);
 
-        } else {
-            // Usuário cancelou ou não digitou nada
-            // Não fazemos nada.
         }
     }
-    // --- FIM DA MUDANÇA ---
 
     @FXML
     private void abrirComandaSelecionada() {

@@ -3,7 +3,6 @@ package App.Controllers;
 import Model.Atendimento.Comanda;
 import Model.Atendimento.Mesa;
 import Model.Atendimento.Pedido;
-import Model.Produtos.CategoriaProduto;
 import Model.Produtos.Produto;
 import Model.Usuarios.Usuario;
 import Model.Produtos.ItemVendavel;
@@ -27,21 +26,22 @@ import java.util.Map;
 
 public class ComandaController extends BaseController {
 
-    //--- Campos FXML ---
     @FXML
     private Label labelTituloComanda;
     @FXML
     private TextField campoCliente;
     @FXML
     private Label labelTotal;
-
-    // Painel da Direita (Pedidos na Comanda)
     @FXML
     private ListView<Pedido> listaPedidos;
+
     @FXML
     private Button botaoRemPedido;
+    @FXML
+    private Button botaoAddPedido;
+    @FXML
+    private Button botaoFecharComanda;
 
-    // Painel da Esquerda (Seleção de Itens)
     @FXML
     private TabPane tabPaneCategorias;
     @FXML
@@ -50,90 +50,63 @@ public class ComandaController extends BaseController {
     private Spinner<Integer> spinnerQuantidade;
     @FXML
     private TextField campoObservacao;
-    @FXML
-    private Button botaoAddPedido;
-    @FXML
-    private Button botaoFecharComanda;
 
-    //--- Campos de Dados ---
     private Mesa mesa;
     private Comanda comanda;
     private Usuario atendente;
     private List<ItemVendavel> itensDisponiveis;
 
     private ObservableList<Pedido> observableListPedidos;
-    private Produto produtoSelecionado; // Armazena o produto clicado no grid
+    private Produto produtoSelecionado;
 
-    /**
-     * Inicializa o controller, carregando dados da comanda e construindo a UI.
-     */
     public void carregarComanda(Mesa mesa, Comanda comanda, Usuario atendente, List<ItemVendavel> itens) {
         this.mesa = mesa;
         this.comanda = comanda;
         this.atendente = atendente;
         this.itensDisponiveis = itens;
-        this.produtoSelecionado = null; // Garante que nada esteja selecionado no início
+        this.produtoSelecionado = null;
 
-        // 1. Configura os campos simples
-        labelTituloComanda.setText("Editando " + comanda.toString());
+        labelTituloComanda.setText(comanda.toString());
         campoCliente.setText(comanda.getClienteNome());
 
-        // 2. Configura a lista de Pedidos (painel da direita)
         List<Pedido> pedidosDaComanda = this.comanda.getPedidos();
         this.observableListPedidos = FXCollections.observableArrayList(pedidosDaComanda);
         this.listaPedidos.setItems(this.observableListPedidos);
 
-        // 3. Constrói o painel de seleção de produtos (painel da esquerda)
         construirAbasDeProdutos();
 
-        // 4. Calcula o total inicial
         atualizarTotal();
     }
 
-    /**
-     * Preenche o TabPane com abas para cada categoria e um grid (TilePane) de
-     * botões de produtos dentro de cada aba.
-     */
     private void construirAbasDeProdutos() {
         tabPaneCategorias.getTabs().clear();
         labelItemSelecionado.setText("Selecione um item...");
         this.produtoSelecionado = null;
 
-        // --- MUDANÇA PRINCIPAL AQUI ---
-
-        // 1. O Mapa agora usa String (o nome da categoria) como chave,
-        //    e não mais o objeto 'CategoriaProduto'
         Map<String, List<Produto>> produtosPorCategoria = new HashMap<>();
 
         for (ItemVendavel item : this.itensDisponiveis) {
             if (item instanceof Produto) {
                 Produto p = (Produto) item;
 
-                // 2. Usamos getCategoriaNome() (a String) como a chave
                 String nomeCat = p.getCategoriaNome();
 
-                // Segurança: Se um produto for salvo sem categoria, não o adicione
                 if (nomeCat == null || nomeCat.trim().isEmpty()) {
                     continue;
                 }
 
-                // A lógica de adicionar ao mapa continua igual
                 produtosPorCategoria
                         .computeIfAbsent(nomeCat, k -> new ArrayList<>())
                         .add(p);
             }
         }
 
-        // 3. Cria a aba a partir da String (nome da categoria)
         for (Map.Entry<String, List<Produto>> entry : produtosPorCategoria.entrySet()) {
-            String nomeCategoria = entry.getKey(); // <-- A chave agora é uma String
+            String nomeCategoria = entry.getKey();
             List<Produto> produtosDaAba = entry.getValue();
 
-            Tab tab = new Tab(nomeCategoria); // <-- Usa a String direto
+            Tab tab = new Tab(nomeCategoria);
             tab.setClosable(false);
-
-            // O resto da lógica para criar o TilePane e os botões
-            // é EXATAMENTE A MESMA de antes.
 
             TilePane grid = new TilePane();
             grid.setPadding(new Insets(10));
@@ -142,8 +115,8 @@ public class ComandaController extends BaseController {
 
             for (Produto p : produtosDaAba) {
                 Button btnProduto = new Button(p.getNome());
-                btnProduto.setPrefSize(100, 80); // Tamanho dos botões
-                btnProduto.setWrapText(true); // Permite que o texto quebre a linha
+                btnProduto.setPrefSize(100, 80);
+                btnProduto.setWrapText(true);
 
                 btnProduto.setOnAction(e -> {
                     this.produtoSelecionado = p;
@@ -158,13 +131,8 @@ public class ComandaController extends BaseController {
         }
     }
 
-    /**
-     * Chamado ao clicar no botão "Adicionar Pedido".
-     * Pega o produto selecionado, a quantidade e observação, e o adiciona à comanda.
-     */
     @FXML
     private void adicionarPedido() {
-        // 1. Valida se um produto foi selecionado (clicado)
         if (this.produtoSelecionado == null) {
             mostrarAlerta("Erro", "Nenhum produto foi selecionado.");
             return;
@@ -173,10 +141,8 @@ public class ComandaController extends BaseController {
         int qtd = spinnerQuantidade.getValue();
         String obs = campoObservacao.getText();
 
-        // 2. Cria o novo pedido
         Pedido novoPedido = new Pedido(this.produtoSelecionado, qtd, obs, this.atendente);
 
-        // 3. Lógica de estoque
         if (produtoSelecionado.getEstoque() < qtd) {
             mostrarAlerta("Estoque Insuficiente", "Estoque Atual: " + produtoSelecionado.getEstoque());
             return;
@@ -184,24 +150,17 @@ public class ComandaController extends BaseController {
         produtoSelecionado.setEstoque(produtoSelecionado.getEstoque() - qtd);
         System.out.println("Baixa estoque: " + produtoSelecionado.getNome() + " | Novo Estoque: " + produtoSelecionado.getEstoque());
 
-        // 4. Adiciona na comanda (modelo) e na lista (visual)
         this.comanda.adicionarPedido(novoPedido);
         this.observableListPedidos.add(novoPedido);
 
-        // 5. Atualiza o total
         atualizarTotal();
 
-        // 6. Limpa os campos para o próximo pedido
         this.produtoSelecionado = null;
         labelItemSelecionado.setText("Selecione um item...");
         spinnerQuantidade.getValueFactory().setValue(1);
         campoObservacao.clear();
     }
 
-    /**
-     * Chamado ao clicar no botão "Remover Pedido Selecionado".
-     * Remove o pedido da comanda e devolve o estoque.
-     */
     @FXML
     private void removerPedido() {
         Pedido pedidoSelecionado = listaPedidos.getSelectionModel().getSelectedItem();
@@ -212,7 +171,6 @@ public class ComandaController extends BaseController {
 
         ItemVendavel itemCancelado = pedidoSelecionado.getItem();
 
-        // Devolve o estoque se o item for um Produto
         if (itemCancelado instanceof Produto) {
             Produto produtoCancelado = (Produto) itemCancelado;
             int qtdCancelada = pedidoSelecionado.getQuantidade();
@@ -220,20 +178,14 @@ public class ComandaController extends BaseController {
             System.out.println("Estorno estoque: " + produtoCancelado.getNome() + " | Novo Estoque: " + produtoCancelado.getEstoque());
         }
 
-        // Remove da comanda (modelo)
         int indice = listaPedidos.getSelectionModel().getSelectedIndex();
         this.comanda.removerPedido(indice);
 
-        // Remove da lista (visual)
         this.observableListPedidos.remove(pedidoSelecionado);
 
         atualizarTotal();
     }
 
-    /**
-     * Chamado ao clicar no botão "Fechar Comanda".
-     * Salva o nome do cliente, fecha a comanda e navega de volta para a tela GerenciarMesa.
-     */
     @FXML
     private void fecharComanda() {
         comanda.setClienteNome(campoCliente.getText());
@@ -241,7 +193,6 @@ public class ComandaController extends BaseController {
 
         mostrarAlerta("Comanda Fechada", "Comanda fechada com sucesso!\nTotal: R$ " + comanda.calcularTotal());
 
-        // Navega de volta para a tela anterior (GerenciarMesaView)
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/GerenciarMesaView.fxml"));
             Parent root = loader.load();
@@ -259,9 +210,6 @@ public class ComandaController extends BaseController {
         }
     }
 
-    /**
-     * Recalcula o total da comanda e atualiza o label na tela.
-     */
     private void atualizarTotal() {
         labelTotal.setText(String.format("Total: R$ %.2f", comanda.calcularTotal()));
     }

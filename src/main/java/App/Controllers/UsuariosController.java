@@ -34,21 +34,18 @@ public class UsuariosController extends BaseController{
 
     private List<Usuario> listaUsuariosCentral;
     private ObservableList<Usuario> observableListUsuarios;
-    private IPersistencia persistenceService; // <-- NOVO: Para salvar
+    private IPersistencia persistenceService;
     private Usuario usuarioSelecionado = null;
 
-    // Inicializa com a lista e o service
     public void inicializar(List<Usuario> listaUsuariosCentral, IPersistencia persistenceService) {
-        this.persistenceService = persistenceService; // Guarda o service
+        this.persistenceService = persistenceService;
         this.listaUsuariosCentral = listaUsuariosCentral;
 
         this.observableListUsuarios = FXCollections.observableArrayList(listaUsuariosCentral);
         this.listaUsuarios.setItems(observableListUsuarios);
 
         this.listaUsuarios.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    selecionarUsuario(newValue);
-                }
+                (observable, oldValue, newValue) -> {selecionarUsuario(newValue);}
         );
 
         limparCampos();
@@ -66,10 +63,10 @@ public class UsuariosController extends BaseController{
         campoNome.setText(usuario.getNome());
         campoSenha.setText(usuario.getSenha());
 
-        // Usa a propriedade que você criou para setar o RadioButton
-        if (!usuario.hasAcessoEstoque()) { // Garcom: acessoConfig = false
+
+        if (!usuario.hasAcessoEstoque()) {
             radioGarcom.setSelected(true);
-        } else { // Interno: acessoConfig = true
+        } else {
             radioInterno.setSelected(true);
         }
     }
@@ -93,7 +90,6 @@ public class UsuariosController extends BaseController{
             }
 
             if (this.usuarioSelecionado == null) {
-                // --- NOVO USUÁRIO ---
                 Usuario novoUsuario;
                 if (ehGarcom) {
                     novoUsuario = new Garcom(nome, senha);
@@ -105,13 +101,11 @@ public class UsuariosController extends BaseController{
                 this.observableListUsuarios.add(novoUsuario);
 
             } else {
-                // --- EDIÇÃO DE USUÁRIO EXISTENTE ---
                 this.usuarioSelecionado.setNome(nome);
                 this.usuarioSelecionado.setSenha(senha);
                 this.listaUsuarios.refresh();
             }
 
-            // --- A MÁGICA: SALVA NO HD APÓS CADA MUDANÇA ---
             persistenceService.salvarUsuarios(listaUsuariosCentral);
 
             limparCampos();
@@ -136,7 +130,6 @@ public class UsuariosController extends BaseController{
         this.listaUsuariosCentral.remove(this.usuarioSelecionado);
         this.observableListUsuarios.remove(this.usuarioSelecionado);
 
-        // --- A MÁGICA: SALVA NO HD APÓS CADA MUDANÇA ---
         persistenceService.salvarUsuarios(listaUsuariosCentral);
 
         limparCampos();

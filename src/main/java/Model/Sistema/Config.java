@@ -6,15 +6,12 @@ public class Config {
     private String nomeRestaurante;
     private String infoRestaurante; // Para CNPJ, Endereço, etc.
 
-    // Construtor com valores padrão (caso o arquivo config.json não exista)
     public Config() {
         this.numeroDeMesas = 10; // O padrão que estamos usando
         this.taxaDeServico = 10.0; // Padrão 10%
         this.nomeRestaurante = "Nome do Restaurante";
         this.infoRestaurante = "CNPJ / Endereço / Telefone";
     }
-
-    // --- Getters e Setters (Essenciais para o JSON) ---
 
     public int getNumeroDeMesas() {
         return numeroDeMesas;

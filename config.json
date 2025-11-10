@@ -1,6 +1,6 @@
 {
   "numeroDeMesas": 20,
-  "taxaDeServico": 20.0,
-  "nomeRestaurante": "WAB FOODS",
+  "taxaDeServico": 10.0,
+  "nomeRestaurante": "Sistema Restaurante",
   "infoRestaurante": "CNPJ / Endereco / Telefone"
 }

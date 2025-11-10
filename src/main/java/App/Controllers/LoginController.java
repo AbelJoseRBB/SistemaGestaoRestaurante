@@ -37,19 +37,14 @@ public class LoginController {
     public void initialize() {
         this.persistenceService = new PersistenceService();
         this.config = persistenceService.carregarConfig();
-        // --- MUDANÇA: Agora carrega a lista REAL (do arquivo) ---
         carregarUsuarios();
-        // --- FIM DA MUDANÇA ---
-
-        carregarProdutos(); // (Sem mudanças)
+        carregarProdutos();
     }
 
     // --- MUDANÇA: Lê do PersistenceService ---
     private void carregarUsuarios() {
-        // Pede para o PersistenceService carregar e retorna a lista
         this.listaDeUsuarios = persistenceService.carregarUsuarios();
     }
-    // --- FIM DA MUDANÇA ---
 
     private void carregarProdutos() {
         this.listaDeProdutos.clear();
@@ -63,7 +58,6 @@ public class LoginController {
         Usuario usuarioEncontrado = null;
 
         for (Usuario u : this.listaDeUsuarios) {
-            // NOTE: A gente usa o método autenticar que você criou!
             if (u.autenticar(nome, senha)) {
                 usuarioEncontrado = u;
                 break;
@@ -84,10 +78,9 @@ public class LoginController {
 
             MesaController mesaController = loader.getController();
 
-            // Passa as listas e serviços para o dashboard
             mesaController.setUsuarioLogado(
                     usuario,
-                    this.listaDeUsuarios, // Lista REAL
+                    this.listaDeUsuarios,
                     this.listaDeProdutos,
                     this.config,
                     this.persistenceService

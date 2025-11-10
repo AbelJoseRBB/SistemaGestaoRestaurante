@@ -1,5 +1,4 @@
 package Model.Produtos;
-import Model.Produtos.CategoriaProduto;
 
 public class Produto implements ItemVendavel {
 
@@ -11,14 +10,13 @@ public class Produto implements ItemVendavel {
     private String descricao;
     private String categoriaNome;
 
-    // 3. ATUALIZAR O CONSTRUTOR
     public Produto(String nome, String descricao, double preco, int estoque, String categoriaNome) {
         this.id = proximoId++;
         this.nome = nome;
         this.descricao = descricao;
         this.preco = preco;
         this.estoque = estoque;
-        this.categoriaNome = categoriaNome; // <-- Linha adicionada
+        this.categoriaNome = categoriaNome;
     }
 
     public double getPreco() {
@@ -64,16 +62,16 @@ public class Produto implements ItemVendavel {
         this.descricao = descricao;
     }
 
-    public String getCategoriaNome() { // <-- MUDANÇA
+    public String getCategoriaNome() {
         return categoriaNome;
     }
 
-    public void setCategoriaNome(String categoriaNome) { // <-- MUDANÇA
+    public void setCategoriaNome(String categoriaNome) {
         this.categoriaNome = categoriaNome;
     }
 
     @Override
     public String toString() {
-        return String.format("[%s] [%d] %s - R$ %.2f (estoque: %d)", categoriaNome, id, nome, preco, estoque); // <-- MUDANÇA
+        return String.format("[%s] [%d] %s - R$ %.2f (estoque: %d)", categoriaNome, id, nome, preco, estoque);
     }
 }

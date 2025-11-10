@@ -30,13 +30,5 @@
     "estoque": 80,
     "descricao": "Lata 350ml",
     "categoriaNome": "Bebidas"
-  },
-  {
-    "id": 5,
-    "nome": "das",
-    "preco": 312.0,
-    "estoque": 312,
-    "descricao": "das",
-    "categoriaNome": "Outro"
   }
 ]

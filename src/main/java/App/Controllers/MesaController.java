@@ -50,8 +50,6 @@ public class MesaController extends BaseController{
     private Config config;
     private IPersistencia persistenceService;
 
-    // --- MUDANÇA PRINCIPAL: ASSINATURA COMPLETA ---
-    // Recebe TODAS as listas e serviços do LoginController
     public void setUsuarioLogado(Usuario usuario, List<Usuario> usuarios, List<Produto> produtos, Config config, IPersistencia service) {
         this.usuarioLogado = usuario;
         this.listaDeUsuarios = usuarios;
@@ -72,13 +70,11 @@ public class MesaController extends BaseController{
 
         carregarMesas();
     }
-    // --- FIM DA MUDANÇA PRINCIPAL ---
 
     private void carregarMesas() {
         painelMesas.getChildren().clear();
         this.listaDeMesas.clear();
 
-        // Usa o número de mesas do config.json (agora persistente!)
         int numeroTotalDeMesas = this.config.getNumeroDeMesas();
         for (int i = 1; i <= numeroTotalDeMesas; i++) {
             Mesa novaMesa = new Mesa(i);
@@ -129,7 +125,7 @@ public class MesaController extends BaseController{
             mostrarAlerta("Erro", "Não foi possível abrir o gerenciador da mesa.");
         }
     }
-//
+
     @FXML
     private void abrirConfiguracoes() {
         try {
@@ -173,7 +169,6 @@ public class MesaController extends BaseController{
             Node painelUsuarios = loader.load();
             UsuariosController controller = loader.getController();
 
-            // --- CORREÇÃO FINAL AQUI ---
             controller.inicializar(this.listaDeUsuarios, (PersistenceService) this.persistenceService);
 
             painelRaiz.setCenter(painelUsuarios);
