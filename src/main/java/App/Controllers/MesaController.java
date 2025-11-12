@@ -92,17 +92,55 @@ public class MesaController extends BaseController{
         }
     }
 
+    // Em MesaController.java
+// SUBSTITUA O SEU MÉTODO INCOMPLETO POR ESTE COMPLETO:
+
     private VBox criarMesaVisual(Mesa mesa) {
         VBox box = new VBox(5);
-        String estiloFundo = mesa.isOcupada() ? "-fx-background-color: #f8d7da;" : "-fx-background-color: #d4edda;";
+
+        String estiloFundo;
+        String statusTexto;
+        String botaoTexto;
+
+        // --- ESTA É A PARTE QUE FALTOU ---
+        // LÓGICA ATUALIZADA (Sem Enum, muito mais simples)
+
+        if (mesa.isAguardandoPagamento()) {
+            // 1º Checa o status Amarelo
+            estiloFundo = "-fx-background-color: #fff3cd;";
+            statusTexto = "Aguardando Pagamento";
+            botaoTexto = "Gerenciar";
+
+        } else if (mesa.isOcupada()) {
+            // 2º Checa o status Vermelho (baseado nas comandas!)
+            estiloFundo = "-fx-background-color: #f8d7da;";
+            statusTexto = "Ocupada (" + mesa.getComandas().size() + ")";
+            botaoTexto = "Gerenciar";
+
+        } else {
+            // 3º Se não for nenhum, está Livre (Verde)
+            estiloFundo = "-fx-background-color: #d4edda;";
+            statusTexto = "Livre";
+            botaoTexto = "Abrir Mesa";
+        }
+        // --- FIM DA PARTE QUE FALTOU ---
+
+
+        // O resto do método é quase igual, mas usa as novas variáveis
         box.setStyle("-fx-border-color: #666; -fx-border-radius: 5; -fx-padding: 10; " + estiloFundo);
         box.setPrefSize(100, 80);
+
         Label label = new Label("Mesa " + mesa.getNumMesa());
         label.setStyle("-fx-font-weight: bold;");
-        Label statusLabel = new Label(mesa.isOcupada() ? "Ocupada (" + mesa.getComandas().size() + ")" : "Livre");
-        Button botaoAbrir = new Button(mesa.isOcupada() ? "Gerenciar" : "Abrir Mesa");
+
+        Label statusLabel = new Label(statusTexto); // Usa o texto novo
+
+        Button botaoAbrir = new Button(botaoTexto); // Usa o texto novo
+
+        // A ação do botão continua a mesma
         botaoAbrir.setOnAction(e -> abrirMesaEspecifica(mesa.getNumMesa()));
-        box.getChildren().addAll(label, statusLabel, botaoAbrir);
+
+        box.getChildren().addAll(label, statusLabel, botaoAbrir     );
         return box;
     }
 

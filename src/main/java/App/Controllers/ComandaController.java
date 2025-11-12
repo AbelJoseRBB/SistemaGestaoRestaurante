@@ -191,6 +191,8 @@ public class ComandaController extends BaseController {
         comanda.setClienteNome(campoCliente.getText());
         comanda.fechar();
 
+        this.mesa.verificarStatusParaPagamento();
+
         mostrarAlerta("Comanda Fechada", "Comanda fechada com sucesso!\nTotal: R$ " + comanda.calcularTotal());
 
         try {
