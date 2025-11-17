@@ -181,7 +181,7 @@ public class MesaController extends BaseController{
 
     @FXML
     private void abrirDashboardMesas() {
-        atualizarVisualDasMesas();
+        sincronizarMesasComConfig();
         painelRaiz.setCenter(this.centroOriginalMesas);
     }
 
@@ -216,4 +216,25 @@ public class MesaController extends BaseController{
             mostrarAlerta("Erro", "Não foi possível carregar a tela de usuários.");
         }
     }
+    private void sincronizarMesasComConfig() {
+        int numeroAtualNaLista = this.listaDeMesas.size();
+        int numeroDesejadoDoConfig = this.config.getNumeroDeMesas();
+
+        if (numeroAtualNaLista == numeroDesejadoDoConfig) {
+            atualizarVisualDasMesas();
+            return;
+        }
+
+        if (numeroDesejadoDoConfig > numeroAtualNaLista) {
+            for (int i = numeroAtualNaLista + 1; i <= numeroDesejadoDoConfig; i++) {
+                Mesa novaMesa = new Mesa(i);
+                this.listaDeMesas.add(novaMesa);
+            }
+        } else {
+            this.listaDeMesas.removeIf(mesa -> mesa.getNumMesa() > numeroDesejadoDoConfig);
+        }
+        atualizarVisualDasMesas();
+    }
+
+
 }
