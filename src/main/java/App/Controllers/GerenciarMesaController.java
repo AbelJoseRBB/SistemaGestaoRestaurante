@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.stage.Stage;
+
 public class GerenciarMesaController extends BaseController{
 
     @FXML
@@ -30,17 +32,51 @@ public class GerenciarMesaController extends BaseController{
     @FXML
     private Button botaoReabrirComanda;
 
+    @FXML
+    private Button botaoFecharMesa;
+
+    @FXML
+    private Button botaoAdicionarComanda;
+
+    @FXML
+    private Button botaoReabrirMesa;
+
+    @FXML
+    private Button botaoReabrirMesaInteira;
+
     private Mesa mesa;
     private Usuario atendente;
     private List<ItemVendavel> produtosDisponiveis;
 
-    public void inicializar(Mesa mesa, Usuario atendente, List<ItemVendavel> produtos) {
+
+    // Em GerenciarMesaController.java
+
+    public void inicializar(Mesa mesa, Usuario atendente, List<ItemVendavel> itens) {
         this.mesa = mesa;
         this.atendente = atendente;
-        this.produtosDisponiveis = produtos;
+        this.produtosDisponiveis = itens;
         labelTituloMesa.setText("Gerenciando Mesa " + mesa.getNumMesa());
         atualizarListaComandas();
 
+        // --- ESTA É A LÓGICA PRINCIPAL ---
+
+        boolean mesaFechada = this.mesa.isAguardandoPagamento();
+
+        // 1. Botão "Adicionar Comanda"
+        //    (Desabilita se a mesa estiver fechada)
+        botaoAdicionarComanda.setDisable(mesaFechada);
+
+        // 2. Botão "Fechar Conta da Mesa"
+        //    (Mostra se a mesa NÃO estiver fechada E tiver comandas)
+        botaoFecharMesa.setVisible(!mesaFechada && !this.mesa.getComandas().isEmpty());
+
+        // 3. Botão "Reabrir Mesa" (com o nome novo)
+        //    (Mostra APENAS se a mesa estiver fechada)
+        botaoReabrirMesaInteira.setVisible(mesaFechada);
+
+        // --- FIM DA LÓGICA ---
+
+        // Listener para os botões "Abrir" e "Reabrir" (individuais)
         this.listaComandas.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> atualizarVisibilidadeBotoes(newValue)
         );
@@ -48,6 +84,18 @@ public class GerenciarMesaController extends BaseController{
     }
 
     private void atualizarVisibilidadeBotoes(Comanda selecionada) {
+
+        // --- REGRA MESTRE ADICIONADA ---
+        // Se a mesa inteira está fechada, NENHUM botão individual
+        // de comanda pode aparecer.
+        if (this.mesa.isAguardandoPagamento()) {
+            botaoAbrirComanda.setVisible(false);
+            botaoReabrirComanda.setVisible(false);
+            return; // Para a execução aqui
+        }
+        // --- FIM DA REGRA MESTRE ---
+
+        // Se a mesa NÃO está fechada, execute a lógica antiga:
         if (selecionada == null) {
             botaoAbrirComanda.setVisible(false);
             botaoReabrirComanda.setVisible(false);
@@ -60,15 +108,29 @@ public class GerenciarMesaController extends BaseController{
         }
     }
 
+    // Em GerenciarMesaController.java
+
     @FXML
     private void reabrirComandaSelecionada() {
         Comanda selecionada = listaComandas.getSelectionModel().getSelectedItem();
 
         if (selecionada != null && selecionada.isFechada()) {
-            selecionada.reabrir();
+            selecionada.reabrir(); // Reabre a comanda individual
 
-            atualizarListaComandas();
-            atualizarVisibilidadeBotoes(selecionada);
+            // --- ADICIONE ESTA LINHA ---
+            // Pede para a Mesa "se checar"
+            this.mesa.verificarStatusParaPagamento();
+            // --- FIM DA LINHA ---
+
+            // Atualiza a tela inteira (isso é importante)
+            atualizarListaComandas(); // Remove o "(FECHADA)"
+            atualizarVisibilidadeBotoes(selecionada); // Mostra/esconde botões individuais
+
+            // Atualiza os botões da MESA (Fechar/Reabrir)
+            boolean mesaFechada = this.mesa.isAguardandoPagamento();
+            botaoAdicionarComanda.setDisable(mesaFechada);
+            botaoFecharMesa.setVisible(!mesaFechada && !this.mesa.getComandas().isEmpty());
+            botaoReabrirMesaInteira.setVisible(mesaFechada);
 
             mostrarAlerta("Sucesso", "A comanda #" + selecionada.getId() + " foi reaberta.");
         }
@@ -128,5 +190,51 @@ public class GerenciarMesaController extends BaseController{
             e.printStackTrace();
             mostrarAlerta("Erro", "Não foi possível abrir a tela da comanda.");
         }
+
+    }
+    // Dentro de GerenciarMesaController.java
+
+    // Em GerenciarMesaController.java
+
+    @FXML
+    private void fecharMesaParaPagamento() {
+
+        // 1. Fecha cada comanda individualmente
+        for (Comanda comanda : this.mesa.getComandas()) {
+            if (!comanda.isFechada()) {
+                comanda.fechar();
+            }
+        }
+
+        // 2. Marca a mesa para pagamento (deixa amarela)
+        this.mesa.setAguardandoPagamento(true);
+
+        // 3. Desabilita o botão de adicionar
+        botaoAdicionarComanda.setDisable(true);
+
+        // --- ESTA É A LINHA QUE FALTAVA ---
+        // 4. Force a lista visual a se redesenhar AGORA
+        //    Isso vai fazer os "(FECHADA)" aparecerem antes da janela fechar.
+        atualizarListaComandas();
+        // --- FIM DA LINHA ADICIONADA ---
+
+        // 5. Fecha esta janela (GerenciarMesaView)
+        Stage stage = (Stage) botaoFecharMesa.getScene().getWindow();
+        stage.close();
+    }
+
+    // Cole este método dentro da sua classe GerenciarMesaController
+
+    @FXML
+    private void reabrirMesaInteira() {
+        // 1. Reverte o status da mesa
+        this.mesa.setAguardandoPagamento(false);
+
+        // 2. Reabilita o botão de adicionar comanda
+        botaoAdicionarComanda.setDisable(false);
+
+        // 3. Fecha a janela
+        Stage stage = (Stage) botaoReabrirMesa.getScene().getWindow();
+        stage.close();
     }
 }

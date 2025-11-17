@@ -16,19 +16,25 @@
             <Label text="Comandas Abertas:" />
             <ListView fx:id="listaComandas" prefHeight="250.0" />
 
-            <StackPane alignment="CENTER">
+            <VBox spacing="5" alignment="CENTER">
                 <Button fx:id="botaoAbrirComanda" onAction="#abrirComandaSelecionada"
-                        text="Abrir Comanda Selecionada" />
+                        text="Abrir Comanda Selecionada" maxWidth="Infinity" />
 
                 <Button fx:id="botaoReabrirComanda" onAction="#reabrirComandaSelecionada"
-                        text="Reabrir Comanda" style="-fx-base: #28a745;" />
-            </StackPane>
+                        text="Reabrir Comanda" style="-fx-base: #28a745;" maxWidth="Infinity" />
+            </VBox>
         </VBox>
     </center>
 
     <bottom>
-        <VBox style="-fx-padding: 15; -fx-background-color: #f4f4f4;">
-            <Button onAction="#adicionarNovaComanda" text="[+] Adicionar Nova Comanda" maxWidth="Infinity" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
-        </VBox>
+        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #f4f4f4;">
+            <Button fx:id="botaoAdicionarComanda" onAction="#adicionarNovaComanda" text="[+] Adicionar Nova Comanda" maxWidth="Infinity" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+
+            <Button fx:id="botaoFecharMesa" onAction="#fecharMesaParaPagamento" text="Fechar Conta da Mesa" maxWidth="Infinity" style="-fx-font-size: 14px; -fx-base: #dc3545;" />
+
+            <Button fx:id="botaoReabrirMesaInteira" onAction="#reabrirMesaInteira"
+                    text="Reabrir Mesa" maxWidth="Infinity"
+                    style="-fx-font-size: 14px; -fx-base: #ffc107;"
+                    visible="false" /> </VBox>
     </bottom>
 </BorderPane>
