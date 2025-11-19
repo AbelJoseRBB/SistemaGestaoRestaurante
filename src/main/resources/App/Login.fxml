@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -7,20 +11,21 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controllers.LoginController"
-      spacing="15" alignment="CENTER" style="-fx-padding: 30; -fx-background-color: #f4f4f4;">
+<VBox alignment="CENTER" prefHeight="362.0" prefWidth="662.0" spacing="15" style="-fx-padding: 30; -fx-background-color: #003366;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="App.Controllers.LoginController">
+    <children>
 
-    <Label text="Login do Sistema" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"/>
+        <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;" text="Login do Sistema" textFill="WHITE" />
 
-    <TextField fx:id="campoUsuario" promptText="Usuário" maxWidth="250" />
-    <PasswordField fx:id="campoSenha" promptText="Senha" maxWidth="250" />
+        <TextField fx:id="campoUsuario" maxWidth="250" promptText="Usuário" />
+        <PasswordField fx:id="campoSenha" maxWidth="250" promptText="Senha" />
 
-    <Button text="Entrar" onAction="#fazerLogin" defaultButton="true" prefWidth="100" />
+        <Button defaultButton="true" onAction="#fazerLogin" prefWidth="100" text="Entrar" />
 
-    <Label fx:id="mensagemErro" style="-fx-text-fill: red; -fx-padding: 10 0 0 0;" />
+        <Label fx:id="mensagemErro" style="-fx-text-fill: red; -fx-padding: 10 0 0 0;" />
+    </children>
 
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20" />
+        <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
 
 </VBox>
