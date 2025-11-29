@@ -2,6 +2,7 @@ package App.Controllers;
 
 import App.Persistencia.IPersistencia;
 import App.Persistencia.PersistenceService;
+import Model.Atendimento.Comanda;
 import Model.Atendimento.Mesa;
 import Model.Produtos.ItemVendavel;
 import Model.Produtos.Produto;
@@ -95,52 +96,44 @@ public class MesaController extends BaseController{
     // Em MesaController.java
 // SUBSTITUA O SEU MÉTODO INCOMPLETO POR ESTE COMPLETO:
 
+    // Em MesaController.java
+
     private VBox criarMesaVisual(Mesa mesa) {
         VBox box = new VBox(5);
-
         String estiloFundo;
         String statusTexto;
-        String botaoTexto;
-
-        // --- ESTA É A PARTE QUE FALTOU ---
-        // LÓGICA ATUALIZADA (Sem Enum, muito mais simples)
+        Button botaoAcao = new Button();
 
         if (mesa.isAguardandoPagamento()) {
-            // 1º Checa o status Amarelo
+            // --- AMARELO: Abre Pagamento Direto ---
             estiloFundo = "-fx-background-color: #fff3cd;";
             statusTexto = "Aguardando Pagamento";
-            botaoTexto = "Gerenciar";
+
+            botaoAcao.setText("Receber / Baixar");
+            // AQUI A MUDANÇA: Chama o método de pagamento direto
+            botaoAcao.setOnAction(e -> abrirTelaPagamento(mesa));
 
         } else if (mesa.isOcupada()) {
-            // 2º Checa o status Vermelho (baseado nas comandas!)
+            // --- VERMELHO ---
             estiloFundo = "-fx-background-color: #f8d7da;";
             statusTexto = "Ocupada (" + mesa.getComandas().size() + ")";
-            botaoTexto = "Gerenciar";
+            botaoAcao.setText("Gerenciar");
+            botaoAcao.setOnAction(e -> abrirMesaEspecifica(mesa.getNumMesa()));
 
         } else {
-            // 3º Se não for nenhum, está Livre (Verde)
+            // --- VERDE ---
             estiloFundo = "-fx-background-color: #d4edda;";
             statusTexto = "Livre";
-            botaoTexto = "Abrir Mesa";
+            botaoAcao.setText("Abrir Mesa");
+            botaoAcao.setOnAction(e -> abrirMesaEspecifica(mesa.getNumMesa()));
         }
-        // --- FIM DA PARTE QUE FALTOU ---
 
-
-        // O resto do método é quase igual, mas usa as novas variáveis
         box.setStyle("-fx-border-color: #666; -fx-border-radius: 5; -fx-padding: 10; " + estiloFundo);
         box.setPrefSize(100, 80);
-
         Label label = new Label("Mesa " + mesa.getNumMesa());
         label.setStyle("-fx-font-weight: bold;");
-
-        Label statusLabel = new Label(statusTexto); // Usa o texto novo
-
-        Button botaoAbrir = new Button(botaoTexto); // Usa o texto novo
-
-        // A ação do botão continua a mesma
-        botaoAbrir.setOnAction(e -> abrirMesaEspecifica(mesa.getNumMesa()));
-
-        box.getChildren().addAll(label, statusLabel, botaoAbrir     );
+        Label statusLabel = new Label(statusTexto);
+        box.getChildren().addAll(label, statusLabel, botaoAcao);
         return box;
     }
 
@@ -150,14 +143,24 @@ public class MesaController extends BaseController{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/GerenciarMesaView.fxml"));
             Parent root = loader.load();
             GerenciarMesaController controller = loader.getController();
+
             List<ItemVendavel> itensVendaveis = new ArrayList<>(this.persistenceService.carregarProdutos());
             controller.inicializar(mesaSelecionada, this.usuarioLogado, itensVendaveis);
+
             Stage gerenciarStage = new Stage();
             gerenciarStage.initModality(Modality.APPLICATION_MODAL);
             gerenciarStage.setTitle("Gerenciando Mesa " + numeroMesa);
             gerenciarStage.setScene(new Scene(root));
+
+            // --- MUDANÇA AQUI: REMOVI O MAXIMIZED ---
+            // gerenciarStage.setMaximized(true); // <--- APAGUEI ESTA LINHA
+            gerenciarStage.setResizable(false); // Opcional: impede esticar a janelinha
+            // ----------------------------------------
+
             gerenciarStage.showAndWait();
+
             atualizarVisualDasMesas();
+
         } catch (IOException e) {
             e.printStackTrace();
             mostrarAlerta("Erro", "Não foi possível abrir o gerenciador da mesa.");
@@ -236,5 +239,38 @@ public class MesaController extends BaseController{
         atualizarVisualDasMesas();
     }
 
+    private void abrirTelaPagamento(Mesa mesaParaPagar) {
+        try {
+            double total = 0.0;
+            for (Comanda c : mesaParaPagar.getComandas()) {
+                total += c.calcularTotal();
+            }
 
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/PagamentoView.fxml"));
+            Parent root = loader.load();
+
+            PagamentoController pgtoController = loader.getController();
+            pgtoController.inicializar(total, mesaParaPagar);
+
+            Stage stage = new Stage();
+            stage.setTitle("Recebendo Mesa " + mesaParaPagar.getNumMesa());
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            // --- REMOVA A LINHA DE MAXIMIZAR DAQUI ---
+            // stage.setMaximized(true); <--- APAGUE ISSO
+            // -----------------------------------------
+
+            // Dica: Se quiser impedir que o usuário estique a janela de pagamento:
+            stage.setResizable(false);
+
+            stage.showAndWait();
+
+            atualizarVisualDasMesas();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Erro", "Não foi possível abrir o pagamento.");
+        }
+    }
 }
