@@ -29,7 +29,7 @@ public class ComandaController extends BaseController {
     @FXML
     private Label labelTituloComanda;
     @FXML
-    private TextField campoCliente;
+    private TextField campoPesquisa;
     @FXML
     private Label labelTotal;
     @FXML
@@ -67,30 +67,40 @@ public class ComandaController extends BaseController {
         this.produtoSelecionado = null;
 
         labelTituloComanda.setText(comanda.toString());
-        campoCliente.setText(comanda.getClienteNome());
+        campoPesquisa.setText("");
+        campoPesquisa.textProperty().addListener((obs, oldValue, newValue) -> {
+            construirAbasDeProdutos(newValue);
+        });
 
         List<Pedido> pedidosDaComanda = this.comanda.getPedidos();
         this.observableListPedidos = FXCollections.observableArrayList(pedidosDaComanda);
         this.listaPedidos.setItems(this.observableListPedidos);
 
-        construirAbasDeProdutos();
+        construirAbasDeProdutos("");
 
         atualizarTotal();
     }
 
-    private void construirAbasDeProdutos() {
+    private void construirAbasDeProdutos(String termoPesquisa) {
         tabPaneCategorias.getTabs().clear();
-        labelItemSelecionado.setText("Selecione um item...");
-        this.produtoSelecionado = null;
 
+        if (!termoPesquisa.isEmpty()) {
+            this.produtoSelecionado = null;
+            labelItemSelecionado.setText("Selecione um item...");
+        }
+        this.produtoSelecionado = null;
         Map<String, List<Produto>> produtosPorCategoria = new HashMap<>();
+        String termo = termoPesquisa.toLowerCase().trim();
 
         for (ItemVendavel item : this.itensDisponiveis) {
             if (item instanceof Produto) {
                 Produto p = (Produto) item;
 
-                String nomeCat = p.getCategoriaNome();
+                if (!termo.isEmpty() && !p.getNome().toLowerCase().contains(termo)) {
+                    continue;
+                }
 
+                String nomeCat = p.getCategoriaNome();
                 if (nomeCat == null || nomeCat.trim().isEmpty()) {
                     continue;
                 }
@@ -188,28 +198,14 @@ public class ComandaController extends BaseController {
 
     @FXML
     private void fecharComanda() {
-        comanda.setClienteNome(campoCliente.getText());
         comanda.fechar();
 
         this.mesa.verificarStatusParaPagamento();
 
-        mostrarAlerta("Comanda Fechada", "Comanda fechada com sucesso!\nTotal: R$ " + comanda.calcularTotal());
+        mostrarAlerta("Comanda Fechada", "Comanda fechada com sucesso!\nTaotal: R$ " + comanda.calcularTotal());
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/GerenciarMesaView.fxml"));
-            Parent root = loader.load();
-
-            GerenciarMesaController gerenciarMesaController = loader.getController();
-            gerenciarMesaController.inicializar(this.mesa, this.atendente, this.itensDisponiveis);
-
-            Stage stage = (Stage) labelTotal.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Gerenciando Mesa " + this.mesa.getNumMesa());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            mostrarAlerta("Erro", "Não foi possível voltar para a tela de gerenciamento.");
-        }
+        Stage stage = (Stage) labelTotal.getScene().getWindow();
+        stage.close();
     }
 
     private void atualizarTotal() {

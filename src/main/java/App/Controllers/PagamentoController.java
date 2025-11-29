@@ -1,5 +1,6 @@
 package App.Controllers;
 
+import Model.Atendimento.Comanda;
 import Model.Atendimento.Mesa;
 import Model.Pagamento.*;
 import javafx.fxml.FXML;
@@ -23,16 +24,13 @@ public class PagamentoController {
     @FXML private TextField campoParcelas;
 
     private double valorDaConta;
-    private Mesa mesaSendoPaga;
-
-    // 1. ADICIONADO: Variável de controle para a outra tela saber o resultado
     private boolean pagamentoRealizado = false;
 
-    public void inicializar(double valor, Mesa mesa) {
-        this.valorDaConta = valor;
-        this.mesaSendoPaga = mesa;
+    public void inicializar(Comanda comanda) {
+        this.valorDaConta = comanda.calcularTotal();
+        this.pagamentoRealizado = false;
 
-        labelValorTotal.setText("R$ " + String.format("%.2f", valor));
+        labelValorTotal.setText("R$ " + String.format("%.2f", this.valorDaConta));
 
         comboMetodo.getItems().addAll("Dinheiro", "Cartão de Débito", "Cartão de Crédito");
         comboMetodo.getSelectionModel().selectedItemProperty().addListener(
@@ -93,8 +91,6 @@ public class PagamentoController {
 
                 // 2. ADICIONADO: Marca que deu certo
                 this.pagamentoRealizado = true;
-
-                finalizarMesa();
                 fecharJanela();
 
             } else {
@@ -103,13 +99,6 @@ public class PagamentoController {
 
         } catch (NumberFormatException e) {
             mostrarAlerta("Erro", "Digite apenas números nos campos de valor e parcelas.");
-        }
-    }
-
-    private void finalizarMesa() {
-        if (this.mesaSendoPaga != null) {
-            this.mesaSendoPaga.setAguardandoPagamento(false);
-            this.mesaSendoPaga.getComandas().clear();
         }
     }
 

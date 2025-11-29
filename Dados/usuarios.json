@@ -23,10 +23,5 @@
     "nome": "teste",
     "senha": "123",
     "acessoConfig": true
-  },
-  {
-    "nome": "robson",
-    "senha": "333",
-    "acessoConfig": false
   }
 ]

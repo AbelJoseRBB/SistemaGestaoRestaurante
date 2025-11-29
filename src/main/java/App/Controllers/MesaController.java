@@ -104,19 +104,17 @@ public class MesaController extends BaseController{
         String statusTexto;
         Button botaoAcao = new Button();
 
-        if (mesa.isAguardandoPagamento()) {
-            // --- AMARELO: Abre Pagamento Direto ---
-            estiloFundo = "-fx-background-color: #fff3cd;";
-            statusTexto = "Aguardando Pagamento";
+        if (mesa.isOcupada()) {
+            boolean temComandaFechada = mesa.getComandas().stream().anyMatch(Comanda::isFechada);
 
-            botaoAcao.setText("Receber / Baixar");
-            // AQUI A MUDANÇA: Chama o método de pagamento direto
-            botaoAcao.setOnAction(e -> abrirTelaPagamento(mesa));
+            if (temComandaFechada) {
+                estiloFundo = "-fx-background-color: #fff3cd;";
+                statusTexto = "Ocupada (Pagto)";
+            } else {
+                estiloFundo = "-fx-background-color: #f8d7da;";
+                statusTexto = "Ocupada (" + mesa.getComandas().size() + ")";
+            }
 
-        } else if (mesa.isOcupada()) {
-            // --- VERMELHO ---
-            estiloFundo = "-fx-background-color: #f8d7da;";
-            statusTexto = "Ocupada (" + mesa.getComandas().size() + ")";
             botaoAcao.setText("Gerenciar");
             botaoAcao.setOnAction(e -> abrirMesaEspecifica(mesa.getNumMesa()));
 
@@ -152,9 +150,7 @@ public class MesaController extends BaseController{
             gerenciarStage.setTitle("Gerenciando Mesa " + numeroMesa);
             gerenciarStage.setScene(new Scene(root));
 
-            // --- MUDANÇA AQUI: REMOVI O MAXIMIZED ---
-            // gerenciarStage.setMaximized(true); // <--- APAGUEI ESTA LINHA
-            gerenciarStage.setResizable(false); // Opcional: impede esticar a janelinha
+            gerenciarStage.setResizable(false);
             // ----------------------------------------
 
             gerenciarStage.showAndWait();
@@ -239,38 +235,4 @@ public class MesaController extends BaseController{
         atualizarVisualDasMesas();
     }
 
-    private void abrirTelaPagamento(Mesa mesaParaPagar) {
-        try {
-            double total = 0.0;
-            for (Comanda c : mesaParaPagar.getComandas()) {
-                total += c.calcularTotal();
-            }
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/PagamentoView.fxml"));
-            Parent root = loader.load();
-
-            PagamentoController pgtoController = loader.getController();
-            pgtoController.inicializar(total, mesaParaPagar);
-
-            Stage stage = new Stage();
-            stage.setTitle("Recebendo Mesa " + mesaParaPagar.getNumMesa());
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-
-            // --- REMOVA A LINHA DE MAXIMIZAR DAQUI ---
-            // stage.setMaximized(true); <--- APAGUE ISSO
-            // -----------------------------------------
-
-            // Dica: Se quiser impedir que o usuário estique a janela de pagamento:
-            stage.setResizable(false);
-
-            stage.showAndWait();
-
-            atualizarVisualDasMesas();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            mostrarAlerta("Erro", "Não foi possível abrir o pagamento.");
-        }
-    }
 }

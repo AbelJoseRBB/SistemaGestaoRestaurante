@@ -30,13 +30,5 @@
     "estoque": 80,
     "descricao": "Lata 350ml",
     "categoriaNome": "Bebidas"
-  },
-  {
-    "id": 1,
-    "nome": "qweqweqw",
-    "preco": 2.0,
-    "estoque": 2,
-    "descricao": "sdasd",
-    "categoriaNome": "Petiscos"
   }
 ]

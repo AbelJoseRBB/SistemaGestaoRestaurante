@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -22,11 +23,9 @@ public class GerenciarMesaController extends BaseController {
     @FXML private ListView<Comanda> listaComandas;
 
     @FXML private Button botaoAbrirComanda;
-    @FXML private Button botaoReabrirComanda;
+    @FXML private HBox boxBotoesFechada;
 
     @FXML private Button botaoAdicionarComanda;
-    @FXML private Button botaoFecharMesa;
-    @FXML private Button botaoReabrirMesaInteira;
     // Removido: botaoRegistrarPagamento
 
     private Mesa mesa;
@@ -38,16 +37,10 @@ public class GerenciarMesaController extends BaseController {
         this.atendente = atendente;
         this.produtosDisponiveis = itens;
         labelTituloMesa.setText("Gerenciando Mesa " + mesa.getNumMesa());
+
         atualizarListaComandas();
 
-        boolean mesaFechada = this.mesa.isAguardandoPagamento();
-
-        botaoAdicionarComanda.setDisable(mesaFechada);
-        botaoFecharMesa.setVisible(!mesaFechada && !this.mesa.getComandas().isEmpty());
-
-        // Apenas Reabrir (Pagar agora é na tela principal)
-        botaoReabrirMesaInteira.setVisible(mesaFechada);
-
+        // Listener para mudar os botões
         this.listaComandas.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> atualizarVisibilidadeBotoes(newValue)
         );
@@ -55,21 +48,15 @@ public class GerenciarMesaController extends BaseController {
     }
 
     private void atualizarVisibilidadeBotoes(Comanda selecionada) {
-        if (this.mesa.isAguardandoPagamento()) {
-            botaoAbrirComanda.setVisible(false);
-            botaoReabrirComanda.setVisible(false);
-            return;
-        }
-
         if (selecionada == null) {
             botaoAbrirComanda.setVisible(false);
-            botaoReabrirComanda.setVisible(false);
+            boxBotoesFechada.setVisible(false);
         } else if (selecionada.isFechada()) {
             botaoAbrirComanda.setVisible(false);
-            botaoReabrirComanda.setVisible(true);
+            boxBotoesFechada.setVisible(true); // Mostra Reabrir e Pagar
         } else {
-            botaoAbrirComanda.setVisible(true);
-            botaoReabrirComanda.setVisible(false);
+            botaoAbrirComanda.setVisible(true); // Mostra Abrir
+            boxBotoesFechada.setVisible(false);
         }
     }
 
@@ -79,12 +66,49 @@ public class GerenciarMesaController extends BaseController {
     }
 
     @FXML
-    private void adicionarNovaComanda() {
-        if (this.mesa.isAguardandoPagamento()) {
-            mostrarAlerta("Mesa Fechada", "Não é possível adicionar comanda em mesa aguardando pagamento.");
+    private void pagarComandaSelecionada() {
+        Comanda selecionada = listaComandas.getSelectionModel().getSelectedItem();
+        if (selecionada == null || !selecionada.isFechada()) {
+            mostrarAlerta("Erro", "Selecione uma comanda FECHADA para pagar.");
             return;
         }
 
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/App/PagamentoView.fxml"));
+            Parent root = loader.load();
+
+            PagamentoController pgtoController = loader.getController();
+            // Passa APENAS a comanda selecionada
+            pgtoController.inicializar(selecionada);
+
+            Stage stage = new Stage();
+            stage.setTitle("Pagamento - Comanda " + selecionada.getClienteNome());
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.showAndWait();
+
+            // Se o pagamento foi confirmado
+            if (pgtoController.isPagamentoRealizado()) {
+                // Remove a comanda da mesa (já foi paga)
+                this.mesa.removerComanda(selecionada); // Certifique-se que Mesa tem esse método
+
+                // Atualiza a tela
+                atualizarListaComandas();
+                atualizarVisibilidadeBotoes(null);
+
+                // Se não sobrar nenhuma comanda, a mesa fica livre automaticamente
+                // (assumindo que Mesa.isOcupada() verifica se a lista está vazia)
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Erro", "Não foi possível abrir o pagamento.");
+        }
+    }
+
+    @FXML
+    private void adicionarNovaComanda() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Nova Comanda");
         dialog.setHeaderText("Mesa " + mesa.getNumMesa());
@@ -97,28 +121,8 @@ public class GerenciarMesaController extends BaseController {
             this.mesa.adicionarComanda(novaComanda);
 
             atualizarListaComandas();
-            botaoFecharMesa.setVisible(true);
-
             abrirJanelaDaComanda(novaComanda);
         }
-    }
-
-    @FXML
-    private void fecharMesaParaPagamento() {
-        for (Comanda comanda : this.mesa.getComandas()) {
-            if (!comanda.isFechada()) comanda.fechar();
-        }
-        this.mesa.setAguardandoPagamento(true);
-        atualizarListaComandas();
-        botaoAdicionarComanda.setDisable(true);
-        ((Stage) botaoFecharMesa.getScene().getWindow()).close();
-    }
-
-    @FXML
-    private void reabrirMesaInteira() {
-        this.mesa.setAguardandoPagamento(false);
-        botaoAdicionarComanda.setDisable(false);
-        ((Stage) botaoReabrirMesaInteira.getScene().getWindow()).close();
     }
 
     @FXML
@@ -132,9 +136,9 @@ public class GerenciarMesaController extends BaseController {
         Comanda selecionada = listaComandas.getSelectionModel().getSelectedItem();
         if (selecionada != null && selecionada.isFechada()) {
             selecionada.reabrir();
-            this.mesa.verificarStatusParaPagamento();
             atualizarListaComandas();
-            inicializar(this.mesa, this.atendente, this.produtosDisponiveis);
+            // Atualiza os botões (vai esconder o Pagar e mostrar o Abrir)
+            atualizarVisibilidadeBotoes(selecionada);
             mostrarAlerta("Sucesso", "Comanda reaberta.");
         }
     }
@@ -150,22 +154,10 @@ public class GerenciarMesaController extends BaseController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Editando " + comandaParaAbrir.toString());
             stage.setScene(new Scene(root));
-
-            // --- MUDANÇA AQUI: ADICIONEI O MAXIMIZED ---
-            stage.setMaximized(true); // <--- TELA CHEIA PARA ADICIONAR PRODUTOS
-            // -------------------------------------------
-
+            stage.setMaximized(true);
             stage.showAndWait();
 
             atualizarListaComandas();
-
-            // Verifica status da mesa ao voltar
-            this.mesa.verificarStatusParaPagamento();
-            boolean mesaFechada = this.mesa.isAguardandoPagamento();
-            botaoAdicionarComanda.setDisable(mesaFechada);
-            botaoFecharMesa.setVisible(!mesaFechada && !this.mesa.getComandas().isEmpty());
-            botaoReabrirMesaInteira.setVisible(mesaFechada);
-
 
         } catch (IOException e) {
             e.printStackTrace();

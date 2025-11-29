@@ -16,9 +16,10 @@
     <top>
         <VBox style="-fx-padding: 15; -fx-background-color: #0A1E2E; -fx-spacing: 5;">
             <Label fx:id="labelTituloComanda" text="Comanda - Mesa X" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;" />
+
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="Cliente:" style="-fx-text-fill: #9fc3ff;" />
-                <TextField fx:id="campoCliente" promptText="Nome do cliente" HBox.hgrow="ALWAYS" />
+                <Label text="Pesquisar:" style="-fx-text-fill: #9fc3ff;" />
+                <TextField fx:id="campoPesquisa" promptText="Digite o nome do produto..." HBox.hgrow="ALWAYS" />
             </HBox>
         </VBox>
     </top>

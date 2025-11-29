@@ -27,10 +27,10 @@ import java.util.List;
 
 public class PersistenceService implements IPersistencia {
 
-    private static final String CONFIG_FILE = "config.json";
-    private static final String USUARIOS_FILE = "usuarios.json";
-    private static final String PRODUTOS_FILE = "produtos.json";
-    private static final String CATEGORIAS_FILE = "categorias.json";
+    private static final String CONFIG_FILE = "Dados/config.json";
+    private static final String USUARIOS_FILE = "Dados/usuarios.json";
+    private static final String PRODUTOS_FILE = "Dados/produtos.json";
+    private static final String CATEGORIAS_FILE = "Dados/categorias.json";
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public List<CategoriaProduto> carregarCategorias() {

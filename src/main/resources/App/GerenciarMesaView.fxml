@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.layout.StackPane?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controllers.GerenciarMesaController" prefHeight="450.0" prefWidth="350.0">
     <top>
         <Label fx:id="labelTituloMesa" text="Gerenciando Mesa X" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 15;" />
@@ -19,13 +20,18 @@
             <Label text="Comandas Abertas:" />
             <ListView fx:id="listaComandas" prefHeight="250.0" />
 
-            <VBox spacing="5" alignment="CENTER">
+            <StackPane alignment="CENTER">
                 <Button fx:id="botaoAbrirComanda" onAction="#abrirComandaSelecionada"
-                        text="Abrir Comanda Selecionada" maxWidth="Infinity" />
+                        text="Abrir / Editar Comanda" />
 
-                <Button fx:id="botaoReabrirComanda" onAction="#reabrirComandaSelecionada"
-                        text="Reabrir Comanda" style="-fx-base: #28a745;" maxWidth="Infinity" />
-            </VBox>
+                <HBox fx:id="boxBotoesFechada" spacing="10" alignment="CENTER" visible="false">
+                    <Button onAction="#reabrirComandaSelecionada"
+                            text="Reabrir" style="-fx-base: #ffc107;" />
+
+                    <Button onAction="#pagarComandaSelecionada"
+                            text="Registrar Pagamento ($)" style="-fx-base: #28a745; -fx-font-weight: bold;" />
+                </HBox>
+            </StackPane>
         </VBox>
     </center>
 
@@ -33,11 +39,6 @@
         <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #f4f4f4; -fx-border-color: #e0e0e0; -fx-border-width: 1 0 0 0;">
 
             <Button fx:id="botaoAdicionarComanda" onAction="#adicionarNovaComanda" text="[+] Adicionar Nova Comanda" maxWidth="Infinity" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
-
-            <Button fx:id="botaoFecharMesa" onAction="#fecharMesaParaPagamento" text="Fechar Conta da Mesa" maxWidth="Infinity" style="-fx-font-size: 14px; -fx-base: #dc3545;" />
-
-            <Button fx:id="botaoReabrirMesaInteira" onAction="#reabrirMesaInteira" text="Reabrir Mesa" maxWidth="Infinity" style="-fx-font-size: 14px; -fx-base: #ffc107;" visible="false" />
-
         </VBox>
     </bottom>
 </BorderPane>
